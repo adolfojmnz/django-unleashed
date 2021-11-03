@@ -1,11 +1,22 @@
 from django.db import models
-from ../organizer/models import Tag, Startup
+from organizer.models import Tag, Startup
 
 
 class Post(models.Model):
-    title    = models.ChartField(max_length=63)
-    slug     = models.SlugField()
+    title    = models.CharField(max_length=63)
+    slug     = models.SlugField(
+                    max_length=63,
+                    help_text='A label for URL config',
+                    unique_for_month='pub_date')
     text     = models.TextField()
-    pub_date = models.DateField()
-    tags     = models.ManyToManyField(Tag)
-    startups = models.ManyToManyField(Startup)
+    pub_date = models.DateField('publication date', auto_now_add=True)
+    tags     = models.ManyToManyField(Tag, related_name='blog_posts')
+    startups = models.ManyToManyField(Startup, related_name='blog_posts')
+
+    def __str__(self):
+        return f'{self.name} on {self.pub_date.strftime("%Y-%m-%d")}'
+
+    class Meta:
+        verbose_name  = 'blog post'
+        ordering      = ['-pub_date', 'title']
+        get_latest_by = 'pub_date'
