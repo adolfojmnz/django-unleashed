@@ -15,7 +15,7 @@ class Tag(models.Model):
 class Startup(models.Model):
     name         = models.CharField(max_length=31)
     slug         = models.SlugField()
-    desciption   = models.TextField()
+    description  = models.TextField()
     founded_date = models.DateField()
     contact      = models.EmailField(max_length=254)
     website      = models.URLField()
