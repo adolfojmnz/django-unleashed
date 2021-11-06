@@ -7,7 +7,7 @@ class Tag(models.Model):
                            help_text='A label for URL config.')
 
     def __str__(self):
-        return self.name
+        return self.name.title()
 
     class Meta:
         ordering = ['name']
@@ -41,5 +41,4 @@ class NewsLink(models.Model):
         verbose_name  = 'news article'
         ordering      = ['-pub_date']
         get_latest_by = 'pub_date'
-
 
