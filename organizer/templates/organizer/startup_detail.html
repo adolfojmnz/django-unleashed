@@ -1,58 +1,66 @@
-<article>
-  <h2>{{ startup.name }}</h2>
+{% extends parent_template|default:"organizer/base_organizer.html" %}
 
-  <dl>
-    <dt>Date Founded</dt>
-      <dd>{{ startup.founded_date|date:"F JS, Y" }}</dd>
+{% block title %}
+  {{ block.super }} - {{ startup.name }}
+{% endblock %}
 
-    <dt>Website</dt>
-      <dd>
-        <a href="{{ startup.website}}">
-          { startup.website }}
-        </a>
-      </dd>
+{% block content %}
+  <article>
+    <h2>{{ startup.name }}</h2>
 
-    <dt>Contact</dt>
-      <dd>{{ startup.contact }}</dd>
+    <dl>
+      <dt>Date Founded</dt>
+        <dd>{{ startup.founded_date|date:"F JS, Y" }}</dd>
 
-    <dt>tag{{ startup.tags.count|pluralize }}</dt>
-      {% for tag in startup.tags.all %}
+      <dt>Website</dt>
         <dd>
-          <a href="">
-            {{ tag.name|title }}
+          <a href="{{ startup.website}}">
+            { startup.website }}
           </a>
         </dd>
-      {% endfor %}
-  </dl>
 
-  {{ startup.description|linebreaks }}
+      <dt>Contact</dt>
+        <dd>{{ startup.contact }}</dd>
 
-  {% if startup.newslink_set.count %}
-    <section>
-      <h3>Recent News</h3>
-      <ul>
-        {% for newslink in startup.newslink_set.all %}
-          <li>
-            <a href="{{ newslink.link }}">{{ newslink.title|title }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-    </section>
-  {% endif %}
-
-  {% if startup.blog_post.count %}
-    <section>
-      <h3>Blog Post{{ startup.blog_posts.count|pluralize }}</h3>
-      <ul>
-        {% for post in startup.blog_post.all %}
-          <li>
+      <dt>tag{{ startup.tags.count|pluralize }}</dt>
+        {% for tag in startup.tags.all %}
+          <dd>
             <a href="">
-              {{ post.title|title }}
+              {{ tag.name|title }}
             </a>
-          </li>
+          </dd>
         {% endfor %}
-      </ul>
-    </section>
-  {% endif %}
+    </dl>
 
-</article>
+    {{ startup.description|linebreaks }}
+
+    {% if startup.newslink_set.count %}
+      <section>
+        <h3>Recent News</h3>
+        <ul>
+          {% for newslink in startup.newslink_set.all %}
+            <li>
+              <a href="{{ newslink.link }}">{{ newslink.title|title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+
+    {% if startup.blog_post.count %}
+      <section>
+        <h3>Blog Post{{ startup.blog_posts.count|pluralize }}</h3>
+        <ul>
+          {% for post in startup.blog_post.all %}
+            <li>
+              <a href="">
+                {{ post.title|title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+
+  </article>
+{% endblock %}

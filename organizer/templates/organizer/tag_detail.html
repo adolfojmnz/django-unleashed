@@ -1,3 +1,10 @@
+{% extends parent_template|default:"organizer/base_organizer.html" %}
+
+{% block title %}
+  {{ block.super }} - {{ tag.name|title }}
+{% endblock %}
+
+{% block content %}
   <h2>Content related to {{ tag.name|title }}</h2>
 
   {% if tag.startup_set.count %}
@@ -39,3 +46,5 @@
   {% if not tag.startup_set.count and not tag.blog_posts.count %}
     <p class="no-content">This tag is not related to any content.</p>
   {% endif %}
+
+{% endblock %}

@@ -1,9 +1,16 @@
-<h2>Startup List</h2>
-<ul>
-  {% for Startup in startup_list %}
-  <li><a href="{{ startup.website }}">{{ startup.name }}</a></li>
-  {% empty %}
-    <li><em>There are no startups availables.</em></li>
-  {% endfor %}
-</ul>
+{% extends parent_template|default:"organizer/base_organizer.html" %}
 
+{% block title %}
+  {{ block.super }} - Startup
+{% endblock %}
+
+{% block content %}
+  <h2>Startup List</h2>
+  <ul>
+    {% for Startup in startup_list %}
+    <li><a href="{{ startup.website }}">{{ startup.name }}</a></li>
+    {% empty %}
+      <li><em>There are no startups availables.</em></li>
+    {% endfor %}
+  </ul>
+{% endblock %}
