@@ -40,7 +40,6 @@ INSTALLED_APPS = [
 
     'blog',
     'organizer',
-    'greetings',
 ]
 
 MIDDLEWARE = [

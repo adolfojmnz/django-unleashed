@@ -11,13 +11,13 @@
 
   {{ post.text|linebreaks }}
 
-  {% if post.startup count or post.tags.count %}
+  {% if post.startup.exists or post.tags.exists %}
     <footer>
 
-      {% if post.startup.count %}
+      {% if post.startup.exists %}
       <h3>Startup{{ post.startup.count|pluralize }}</h3>
       <ul>
-        {% for startup in post.startup.count %}
+        {% for startup in post.startup.all %}
           <li>
             <a href="{{ startup.website }}">
               {{ startup,name }}
@@ -27,10 +27,10 @@
       </ul>
       {% endif %}
 
-      {% if post.tags.count %}
+      {% if post.tags.exists %}
         <h3>Tag{{ post.tags.count|pluralize }}</h3>
         <ul>
-          {% for tag in post.tags.count %}
+          {% for tag in post.tags.all %}
             <li>
               <a href="">{{ tag.name|pluralize }}</a>
             </li>

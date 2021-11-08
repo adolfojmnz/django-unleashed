@@ -7,7 +7,7 @@
 {% block content %}
   <h2>Content related to {{ tag.name|title }}</h2>
 
-  {% if tag.startup_set.count %}
+  {% if tag.startup_set.exists %}
     <section>
       <h3>
         {{ tag.name|title }} is related to
@@ -27,7 +27,7 @@
     </section>
   {% endif %}
 
-  {% if tag.blog_posts.count %}
+  {% if tag.blog_posts.exists %}
     <section>
       <h3>
         {{ tag.name|title }} is related to
@@ -43,7 +43,7 @@
     </section>
   {% endif %}
 
-  {% if not tag.startup_set.count and not tag.blog_posts.count %}
+  {% if not tag.startup_set.exists and not tag.blog_posts.exists %}
     <p class="no-content">This tag is not related to any content.</p>
   {% endif %}
 
