@@ -1,0 +1,9 @@
+<h2>Startup List</h2>
+<ul>
+  {% for Startup in startup_list %}
+  <li><a href="{{ startup.website }}">{{ startup.name }}</a></li>
+  {% empty %}
+    <li><em>There are no startups availables.</em></li>
+  {% endfor %}
+</ul>
+
