@@ -1,10 +1,16 @@
 from django.urls import path
 
-from .views import post_list, post_detail
+from .views import PostList, post_detail
 
 
 urlpatterns = [
-        path('post_list/', post_list, name='post_list'),
+        path('post_list/', PostList.as_view(),
+            {'parent_template': 'base.html'},
+            name='post_list'
+        ),
+
         path('<int:year>/<int:month>/<slug:slug>', post_detail,
-            name='post_detail'),
+            {'parent_template': 'base.html',
+             'name': 'post_detail'}
+        ),
 ]
