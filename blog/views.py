@@ -1,10 +1,14 @@
 from django.shortcuts import render, get_object_or_404
+from django.views.generic import View
 
 
-def post_list(request):
-    tmplate_name = 'blog/post_list.html'
-    context = {'post_list': Post.objects.all()}
-    return render(request, template_name, context)
+class PostList(View):
+
+    def get(self, request):
+        tmplate_name = 'blog/post_list.html'
+        context = {'post_list': Post.objects.all()}
+        return render(request, template_name, context)
+
 
 def post_detail(request):
     template_name = 'blog/post_detail.html'
