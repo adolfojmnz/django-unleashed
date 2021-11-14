@@ -1,11 +1,15 @@
 from django.urls import reverse
 from django.db import models
+from django import forms
 
 
 class Tag(models.Model):
-    name         = models.CharField(max_length=31, unique=True)
-    slug         = models.SlugField(max_length=31, unique=True,
-                           help_text='A label for URL config.')
+    name = models.CharField(max_length=31, unique=True)
+    slug = models.SlugField(max_length=31, unique=True,
+                   help_text='A label for URL config.')
+
+    class Meta:
+        ordering = ['name']
 
     def get_absolute_url(self):
         return reverse(
@@ -16,8 +20,18 @@ class Tag(models.Model):
     def __str__(self):
         return self.name.title()
 
-    class Meta:
-        ordering = ['name']
+class TagForm(forms.Form):
+    name = forms.CharField(max_length=31, unique=True)
+    slug = forms.SlugField(max_length=31, unique=True,
+                  help_text='A label for URL config.')
+
+    def save(self):
+        new_tag = Tag.objects.create(
+                name=self.cleaned_data['name'],
+                slug=self.cleaned_data['slug'],
+        )
+        return new_tag
+
 
 class Startup(models.Model):
     name         = models.CharField(max_length=31)
