@@ -16,6 +16,16 @@
     <div>
       <header>
         <h1>Startup Organizer</h1>
+        <nav>
+          <ul>
+            <li>
+              <a href="{% url 'post_list' %}">Blog</a></li>
+            <li>
+              <a href="{% url 'startup_list' %}">Startups</a></li>
+            <li>
+              <a href="{% url 'tag_list' %}">Tags</a></li>
+          </ul>
+        </nav>
       </header>
       <main>
         {% block content %}

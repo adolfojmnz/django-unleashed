@@ -6,9 +6,6 @@ from .views import (
 
 
 urlpatterns = [
-        # home and about page
-        path('', homepage, name='homepage'),
-
         # tags related urls
         path('tag/', tag_list, name='tag_list'),
         path('tag/<slug:slug>/', tag_detail, name='tag_detail'),

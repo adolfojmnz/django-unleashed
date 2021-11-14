@@ -1,14 +1,16 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import View
 
+from .models import Post
+
 
 class PostList(View):
 
     def get(self, request, parent_template=None):
-        tmplate_name = 'blog/post_list.html'
+        template_name = 'blog/post_list.html'
         context = {
-                'post_list': Post.objects.all()
-                'parent_template': parent_template
+                'post_list': Post.objects.all(),
+                'parent_template': parent_template,
         }
         return render(request, template_name, context)
 
