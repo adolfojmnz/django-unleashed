@@ -6,3 +6,4 @@ from .views import redirect_root
 urlpatterns = [
         path('', redirect_root),
 ]
+

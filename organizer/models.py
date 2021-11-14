@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.db import models
 
 
@@ -5,6 +6,12 @@ class Tag(models.Model):
     name         = models.CharField(max_length=31, unique=True)
     slug         = models.SlugField(max_length=31, unique=True,
                            help_text='A label for URL config.')
+
+    def get_absolute_url(self):
+        return reverse(
+                'tag_detail',
+                keyword={'slug': self.slug}
+        )
 
     def __str__(self):
         return self.name.title()
@@ -20,6 +27,12 @@ class Startup(models.Model):
     contact      = models.EmailField(max_length=254)
     website      = models.URLField()
     tags         = models.ManyToManyField(Tag)
+
+    def get_absolute_url(self):
+        return reverse(
+                'startup_detail',
+                kwargs={'slug': self.slug}
+        )
 
     def __str__(self):
         return self.name

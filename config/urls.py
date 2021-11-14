@@ -9,3 +9,4 @@ urlpatterns = [
     path('', include('blog.urls')),
     path('', include('organizer.urls')),
 ]
+

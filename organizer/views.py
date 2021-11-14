@@ -3,7 +3,6 @@ from django.shortcuts import render, get_object_or_404
 
 from .models import Tag, Startup, NewsLink
 
-
 def homepage(request):
     template_name = 'organizer/homepage.html'
     return render(request, template_name)
@@ -27,3 +26,4 @@ def startup_detail(request, slug):
     template_name = 'organizer/startup_detail.html'
     context = {'startup': get_object_or_404(Startup, slug__iexact=slug)}
     return render(request, template_name, context)
+
