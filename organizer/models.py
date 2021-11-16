@@ -13,7 +13,7 @@ class Tag(models.Model):
     def get_absolute_url(self):
         return reverse(
                 'tag_detail',
-                keyword={'slug': self.slug}
+                kwargs={'slug': self.slug}
         )
 
     def __str__(self):

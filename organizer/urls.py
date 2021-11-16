@@ -6,11 +6,11 @@ from .views import (
 
 
 urlpatterns = [
-        # tags related urls
+        # tags urls
         path('tag/', tag_list, name='tag_list'),
         path('tag/<slug:slug>/', tag_detail, name='tag_detail'),
 
-        # startups related urls
+        # startups urls
         path('startup/', startup_list, name='startup_list'),
         path('startup/<slug:slug>/', startup_detail, name='startup_detail'),
 ]
