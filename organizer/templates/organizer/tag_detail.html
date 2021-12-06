@@ -1,50 +1,54 @@
 {% extends parent_template|default:"organizer/base_organizer.html" %}
 
 {% block title %}
-  {{ block.super }} - {{ tag.name|title }}
+{{ block.super }} - {{ tag.name|title }}
+{% endblock %}
+
+{% block heading %}
+<h1>Tag Details Page</h1>
 {% endblock %}
 
 {% block content %}
-  <h2>Content related to {{ tag.name|title }}</h2>
+<h2>Content related to {{ tag.name|title }}</h2>
 
-  {% if tag.startup_set.exists %}
-    <section>
-      <h3>
-        {{ tag.name|title }} is related to
-        {{ tag.startup_set.count }}
-        startup{{ tag.startup_set.count|pluralize }}
-      </h3>
-      <ul>
-        <!-- List of startups related to tag. -->
-        {% for startup in tag.startup_set.all %}
-          <li>
-            <a href="{{ startup.get_absolute_url }}">
-              {{ startup.name|title }}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-    </section>
-  {% endif %}
+{% if tag.startup_set.exists %}
+<section>
+	<h3>
+		{{ tag.name|title }} is related to
+		{{ tag.startup_set.count }}
+		startup{{ tag.startup_set.count|pluralize }}
+	</h3>
+	<ul>
+		<!-- List of startups related to tag. -->
+		{% for startup in tag.startup_set.all %}
+		<li>
+			<a href="{{ startup.get_absolute_url }}">
+				{{ startup.name|title }}
+			</a>
+		</li>
+		{% endfor %}
+	</ul>
+</section>
+{% endif %}
 
-  {% if tag.blog_posts.exists %}
-    <section>
-      <h3>
-        {{ tag.name|title }} is related to
-        {{ tag.blog_posts.count }}
-        blog post{{ tag.blog_posts.count|pluralize }}
-      </h3>
-      <!-- List of post related to tag. -->
-        {% for post in tag.blog_posts.all %}
-          <ul>
-            <li><a href="{{ post.get_absolute_url }}">{{ post.title|title }}</a></li>
-          </ul>
-        {% endfor %}
-    </section>
-  {% endif %}
+{% if tag.blog_posts.exists %}
+<section>
+	<h3>
+		{{ tag.name|title }} is related to
+		{{ tag.blog_posts.count }}
+		blog post{{ tag.blog_posts.count|pluralize }}
+	</h3>
+	<!-- List of post related to tag. -->
+	{% for post in tag.blog_posts.all %}
+	<ul>
+		<li><a href="{{ post.get_absolute_url }}">{{ post.title|title }}</a></li>
+	</ul>
+	{% endfor %}
+</section>
+{% endif %}
 
-  {% if not tag.startup_set.exists and not tag.blog_posts.exists %}
-    <p class="no-content">This tag is not related to any content.</p>
-  {% endif %}
+{% if not tag.startup_set.exists and not tag.blog_posts.exists %}
+<p class="no-content">This tag is not related to any content.</p>
+{% endif %}
 
 {% endblock %}

@@ -12,7 +12,7 @@ class SlugCleanMixin:
         if new_slug == 'create':
             raise ValidationError(
                     'The slug "create" is not allowed.'
-                    )
+            )
         return new_slug
 
 
@@ -26,7 +26,7 @@ class TagForm(forms.ModelForm, SlugCleanMixin):
         return self.cleaned_data['name'].lower()
 
 
-class StartupForm(models.ModelForm, SlugCleanMixin):
+class StartupForm(forms.ModelForm, SlugCleanMixin):
 
     class Metal:
         model  = Startup
@@ -38,4 +38,3 @@ class NewsLinkForm(forms.ModelForm):
     class Meta:
         model  = NewsLink
         fields = '__all__'
-

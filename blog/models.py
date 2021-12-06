@@ -15,13 +15,15 @@ class Post(models.Model):
     startups = models.ManyToManyField(Startup, related_name='blog_posts')
 
     def get_absolute_url(self):
-        return reverse('post_detail',
-                kwargs={
-                    'year': self.pub_date.year,
-                    'month': self.pub_date.month,
-                    'slug': self.slug,
-                }
+        return reverse(
+            'post_detail',
+            kwargs = {
+                'year': self.pub_date.year,
+                'month': self.pub_date.month,
+                'slug': self.slug
+            }
         )
+
 
     def __str__(self):
         return f'{self.title} on {self.pub_date.strftime("%Y-%m-%d")}'
@@ -30,4 +32,3 @@ class Post(models.Model):
         verbose_name  = 'blog post'
         ordering      = ['-pub_date', 'title']
         get_latest_by = 'pub_date'
-

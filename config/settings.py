@@ -23,6 +23,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+	# extensions
+    'bootstrap5',
+    'django_extensions',
+
+	# my apps
     'blog',
     'routes',
     'organizer',

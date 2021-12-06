@@ -1,50 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <title>
-      {% block title %}
-        Startup Organizer
-      {% endblock %}
-    </title>
-  </head>
+{% load bootstrap5 %}
 
-  <body>
-    <div>
-      <header>
-        <h1>Startup Organizer</h1>
-        <nav>
-          <ul>
-            <li>
-              <!-- <a href="{% url 'post_list' %}">Blog</a></li>
-            <li>
-              <a href="{% url 'startup_list' %}">Startups</a></li>
-            <li>
-              <a href="{% url 'tag_list' %}">Tags</a></li>
-              -->
-          </ul>
-        </nav>
-      </header>
-      <main>
-        {% block content %}
-          This is default content
-        {% endblock %}
-      </main>
-    </div>
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 
-    <footer>
-      <p>&#127279; 2021
-        <a href="https://github.com/Eadwulf/"</a>
-          Adolfo Jiménez
-        </a>
-      </p>
-      <p>Created following
-        <a href="https://django-unleashed.com">
-          Django Unleashed Book
-        </a>
-      </p>
-    </footer>
-  </body>
+<head>
+	<meta charset="utf-8">
+	<title>
+		{% block title %}
+		Startup Organizer
+		{% endblock %}
+	</title>
+</head>
+
+<body>
+	<div>
+		<header>
+			{% block heading %}
+			<h1 class="main-heading">Startup Organizer</h1>
+			{% endblock %}
+			{% block navbar %}
+			<nav>
+				<a href="{% url 'post_list' %}">Blog</a> |
+				<a href="{% url 'startup_list' %}">Startups</a> |
+				<a href="{% url 'tag_list' %}">Tags</a>
+				<br>
+			</nav>
+			{% endblock %}
+		</header>
+		<main>
+			{% block content %}
+			This is default content
+			{% endblock %}
+		</main>
+	</div>
+
+	<footer>
+		<p>&#127279; 2021
+			<a href="https://github.com/Eadwulf/" title="Eadwulf on Github" target="_blank">
+				Adolfo Jiménez
+			</a>
+		</p>
+		<p>Created following
+			<a href="https://django-unleashed.com" title="Django Unleashed" target="_blank">
+				Django Unleashed Book
+			</a>
+		</p>
+	</footer>
+</body>
 
 </html>
