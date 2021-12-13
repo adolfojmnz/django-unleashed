@@ -9,17 +9,26 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'tag_create' %}" method="post">
-	{% csrf_token %}
-	<p>
-		<label for="id_name">Name:</label>
-		<input id="id_name" maxlength="31" name="name" type="text" />
-	</p>
-	<p>
-		<label for="id_slug">Slug:</label>
-		<input id="id_slug" maxlength=31 name="slug" type="text" />
-		<span class="helptext">A label for url</span>
-	</p>
-	<button type="submit">Create Tag</button>
-</form>
+<di>
+	<div>
+		<form action="{% url 'tag_create' %}" method="POST">
+			{% csrf_token %}
+
+			{% for field in form %}
+				{{ field.errors }}
+				<p>
+					{{ fielde.label_tag }}
+					{{ field }}
+				</p>
+				{% if field.help_text %}
+					<span class="help-text">
+						{{ field.help_text }}
+					</span>
+				{% endif %}
+			{% endfor %}
+			<button type="submit">Create Tag</button>
+
+		</form>
+	</div>
+</di>
 {% endblock %}
