@@ -16,6 +16,12 @@ class Tag(models.Model):
                 kwargs={'slug': self.slug}
         )
 
+    def get_update_url(self):
+        return reverse(
+            'tag_update',
+            kwargs={'slug': self.slug}
+        )
+
     def __str__(self):
         return self.name.title()
 
@@ -33,6 +39,12 @@ class Startup(models.Model):
         return reverse(
                 'startup_detail',
                 kwargs={'slug': self.slug}
+        )
+
+    def get_update_url(self):
+        return reverse(
+            'startup_update',
+            kwargs={'slug': self.slug}
         )
 
     def __str__(self):
@@ -55,4 +67,3 @@ class NewsLink(models.Model):
         verbose_name  = 'news article'
         ordering      = ['-pub_date']
         get_latest_by = 'pub_date'
-
