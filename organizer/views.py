@@ -34,10 +34,19 @@ def startup_detail(request, slug):
 
 # helper functions
 def tag_create(request):
-	template_name = 'organizer/tag_form.html'
+	template_name = 'organizer/tag_form_create.html'
 	if request.method == 'POST':
 		form = TagForm(request.POST)
-	else:
+	elif request.method == 'GET':
 		form = TagForm()
 	context = {'form': form}
+	return render(request, template_name, context)
+
+def tag_update(request, slug):
+	template_name = 'organizer/tag_form_update.html'
+	if request.method == 'POST':
+		form = TagForm(request.POST)
+	elif request.method == 'GET':
+		form = TagForm(instance=Tag.objects.get(slug__iexact=slug))
+	context = {'slug': slug, 'form': form}
 	return render(request, template_name, context)
