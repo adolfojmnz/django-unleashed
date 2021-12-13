@@ -2,6 +2,8 @@ from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 
 from .models import Tag, Startup, NewsLink
+from .forms import TagForm, StartupForm, NewsLink
+
 
 def homepage(request):
     template_name = 'organizer/homepage.html'
@@ -33,4 +35,9 @@ def startup_detail(request, slug):
 # helper functions
 def tag_create(request):
 	template_name = 'organizer/tag_form.html'
-	return render(request, template_name)
+	if request.method == 'POST':
+		form = TagForm(request.POST)
+	else:
+		form = TagForm()
+	context = {'form': form}
+	return render(request, template_name, context)
