@@ -13,9 +13,12 @@ def tag_list(request):
     return render(request, template_name, context)
 
 def tag_detail(request, slug):
-    template_name = 'organizer/tag_detail.html'
-    context = {'tag': get_object_or_404(Tag, slug__iexact=slug)}
-    return render(request, template_name, context)
+	if slug == 'create':
+		return tag_create(request)
+	else:
+	    template_name = 'organizer/tag_detail.html'
+	    context = {'tag': get_object_or_404(Tag, slug__iexact=slug)}
+	    return render(request, template_name, context)
 
 def startup_list(request):
     template_name = 'organizer/startup_list.html'
@@ -27,3 +30,7 @@ def startup_detail(request, slug):
     context = {'startup': get_object_or_404(Startup, slug__iexact=slug)}
     return render(request, template_name, context)
 
+# helper functions
+def tag_create(request):
+	template_name = 'organizer/tag_form.html'
+	return render(request, template_name)
