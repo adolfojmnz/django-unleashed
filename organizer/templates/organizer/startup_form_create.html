@@ -1,0 +1,21 @@
+{% extends parent_template|default:"organizer/base_organizer" %}
+
+
+{% block title %}
+	{{ block.super }} - Create A Startup Model
+{% endblock %}
+
+{% block heading %}
+	Create A Startup Model
+{% endblock %}
+
+{% block content %}
+	<div>
+		<div>
+			<form action="{{ startup.get_create_url }}" method="POST">
+				{% csrf_token %}
+				{{ form.as_p }}
+			</form>
+		</div>
+	</div>
+{% endblock %}
