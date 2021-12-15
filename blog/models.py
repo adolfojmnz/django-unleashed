@@ -14,9 +14,14 @@ class Post(models.Model):
     tags     = models.ManyToManyField(Tag, related_name='blog_posts')
     startups = models.ManyToManyField(Startup, related_name='blog_posts')
 
-    def get_absolute_url(self):
+    class Meta:
+        verbose_name  = 'blog post'
+        ordering      = ['-pub_date', 'title']
+        get_latest_by = 'pub_date'
+
+    def get_reversed_url(self, path_name):
         return reverse(
-            'post_detail',
+            path_name,
             kwargs = {
                 'year': self.pub_date.year,
                 'month': self.pub_date.month,
@@ -24,11 +29,17 @@ class Post(models.Model):
             }
         )
 
+    def get_absolute_url(self):
+        return self.get_reversed_url(path_name='post_detail')
+
+    def get_create_url(self):
+        return self.get_reversed_url(path_name='post_create')
+
+    def get_update_url(self):
+        return self.get_reversed_url(path_name='post_update')
+
+    def get_delete_url(self):
+        return self.get_reversed_url(path_name='post_delete')
 
     def __str__(self):
         return f'{self.title} on {self.pub_date.strftime("%Y-%m-%d")}'
-
-    class Meta:
-        verbose_name  = 'blog post'
-        ordering      = ['-pub_date', 'title']
-        get_latest_by = 'pub_date'
