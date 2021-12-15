@@ -1,6 +1,5 @@
 {% extends parent_template|default:"organizer/base_organizer" %}
 
-
 {% block title %}
 	{{ block.super }} - Create A Startup Model
 {% endblock %}
@@ -15,6 +14,7 @@
 			<form action="{{ startup.get_create_url }}" method="POST">
 				{% csrf_token %}
 				{{ form.as_p }}
+				<button type="submit">Create</button>
 			</form>
 		</div>
 	</div>
