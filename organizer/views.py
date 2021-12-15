@@ -1,5 +1,6 @@
-from django.http import Http404
-from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Tag, Startup, NewsLink
 from .forms import TagForm, StartupForm, NewsLink
@@ -34,19 +35,43 @@ def startup_detail(request, slug):
 
 # helper functions
 def tag_create(request):
-	template_name = 'organizer/tag_form_create.html'
 	if request.method == 'POST':
 		form = TagForm(request.POST)
+		if form.is_valid():
+			new_tag = form.save()
+			return redirect(new_tag)
+		else:
+			context = {'form': form}
 	elif request.method == 'GET':
-		form = TagForm()
-	context = {'form': form}
+		context = {'form': TagForm()}
+
+	template_name = 'organizer/tag_form_create.html'
 	return render(request, template_name, context)
 
 def tag_update(request, slug):
-	template_name = 'organizer/tag_form_update.html'
 	if request.method == 'POST':
 		form = TagForm(request.POST)
+		if form.is_valid():
+			updated_tag = form.save()
+			return redirect(updated_tag)
+		else:
+			context = {'slug': slug, 'form': form}
 	elif request.method == 'GET':
 		form = TagForm(instance=Tag.objects.get(slug__iexact=slug))
-	context = {'slug': slug, 'form': form}
+		context = {'slug': slug, 'form': form}
+
+	template_name = 'organizer/tag_form_update.html'
 	return render(request, template_name, context)
+
+def tag_delete(request, slug):
+	if request.method == 'POST':
+		tag = Tag.objects.get(slug__iexact=slug)
+		if tag:
+			tag.delete()
+			return redirect(tag_list)
+		else:
+			raise Tag.DoesNotExist
+	elif request.method == 'GET':
+		template_name = 'organizer/tag_form_delete.html'
+		context = {'tag': Tag.objects.get(slug__iexact=slug)}
+		return render(request, template_name, context)
