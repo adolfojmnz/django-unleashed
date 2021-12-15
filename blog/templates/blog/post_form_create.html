@@ -1,0 +1,21 @@
+{% extends parent_template|default:"organizer/base_organizer" %}
+
+{% block title %}
+	{{ block.super }} - Create A Post Model
+{% endblock %}
+
+{% block heading %}
+	Create A Post Model
+{% endblock %}
+
+{% block content %}
+	<div>
+		<div>
+			<form action="{{ post.get_create_url }}" method="POST">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<button type="submit">Create</button>
+			</form>
+		</div>
+	</div>
+{% endblock %}
