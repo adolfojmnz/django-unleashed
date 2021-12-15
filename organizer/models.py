@@ -10,23 +10,23 @@ class Tag(models.Model):
     class Meta:
         ordering = ['name']
 
-    def get_absolute_url(self):
+    def get_reversed_url(self, path_name):
         return reverse(
-                'tag_detail',
-                kwargs={'slug': self.slug}
+            path_name,
+            kwargs={'slug': self.slug}
         )
+
+    def get_absolute_url(self):
+        return self.get_reversed_url(path_name='tag_detail')
+
+    def get_create_url(self):
+        return self.get_reversed_url(path_name='tag_create')
 
     def get_update_url(self):
-        return reverse(
-            'tag_update',
-            kwargs={'slug': self.slug}
-        )
+        return self.get_reversed_url(path_name='tag_update')
 
     def get_delete_url(self):
-        return reverse(
-            'tag_delete',
-            kwargs={'slug': self.slug}
-        )
+        return self.get_reversed_url(path_name='tag_delete')
 
     def __str__(self):
         return self.name.title()
@@ -41,24 +41,30 @@ class Startup(models.Model):
     website      = models.URLField()
     tags         = models.ManyToManyField(Tag)
 
-    def get_absolute_url(self):
-        return reverse(
-                'startup_detail',
-                kwargs={'slug': self.slug}
-        )
-
-    def get_update_url(self):
-        return reverse(
-            'startup_update',
-            kwargs={'slug': self.slug}
-        )
-
-    def __str__(self):
-        return self.name
-
     class Meta:
         ordering      = ['name']
         get_latest_by = 'founded_date'
+
+    def get_reversed_url(self, path_name):
+        return reverse(
+            path_name,
+            kwargs={'slug': self.slug}
+        )
+
+    def get_absolute_url(self):
+        return self.get_reversed_url(path_name='startup_detail')
+
+    def get_create_url(self):
+        return self.get_reversed_url(path_name='startup_create')
+
+    def get_update_url(self):
+        return self.get_reversed_url(path_name='startup_update')
+
+    def get_delete_url(self):
+        return self.get_reversed_url(path_name='startup_delete')
+
+    def __str__(self):
+        return self.name
 
 class NewsLink(models.Model):
     title        = models.CharField(max_length=63)
@@ -66,10 +72,10 @@ class NewsLink(models.Model):
     link         = models.URLField(max_length=255)
     startup      = models.ForeignKey(Startup, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f'{self.title} >> {self.startup}'
-
     class Meta:
         verbose_name  = 'news article'
         ordering      = ['-pub_date']
         get_latest_by = 'pub_date'
+
+	def __str__(self):
+		return f'{self.title} >> {self.startup}'
