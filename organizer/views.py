@@ -10,10 +10,12 @@ def homepage(request):
     template_name = 'organizer/homepage.html'
     return render(request, template_name)
 
+	
 def tag_list(request):
     template_name = 'organizer/tag_list.html'
     context       = {'tag_list': Tag.objects.all()}
     return render(request, template_name, context)
+
 
 def tag_detail(request, slug):
 	if slug == 'create':
@@ -23,15 +25,18 @@ def tag_detail(request, slug):
 	    context = {'tag': get_object_or_404(Tag, slug__iexact=slug)}
 	    return render(request, template_name, context)
 
+
 def startup_list(request):
     template_name = 'organizer/startup_list.html'
     context       = {'startup_list': Startup.objects.all()}
     return render(request, template_name, context)
 
+
 def startup_detail(request, slug):
     template_name = 'organizer/startup_detail.html'
     context = {'startup': get_object_or_404(Startup, slug__iexact=slug)}
     return render(request, template_name, context)
+
 
 # helper functions
 def tag_create(request):
@@ -48,6 +53,7 @@ def tag_create(request):
 	template_name = 'organizer/tag_form_create.html'
 	return render(request, template_name, context)
 
+
 def tag_update(request, slug):
 	if request.method == 'POST':
 		form = TagForm(request.POST)
@@ -62,6 +68,7 @@ def tag_update(request, slug):
 
 	template_name = 'organizer/tag_form_update.html'
 	return render(request, template_name, context)
+
 
 def tag_delete(request, slug):
 	if request.method == 'POST':
