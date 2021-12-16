@@ -17,7 +17,6 @@ class SlugCleanMixin:
 
 
 class TagForm(forms.ModelForm, SlugCleanMixin):
-
     class Meta:
         model = Tag
         fields = '__all__'
@@ -27,14 +26,12 @@ class TagForm(forms.ModelForm, SlugCleanMixin):
 
 
 class StartupForm(forms.ModelForm, SlugCleanMixin):
-
-    class Metal:
+    class Meta:
         model  = Startup
         fields = '__all__'
 
 
 class NewsLinkForm(forms.ModelForm):
-
     class Meta:
         model  = NewsLink
         fields = '__all__'
