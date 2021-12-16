@@ -36,7 +36,7 @@ class Startup(models.Model):
     name         = models.CharField(max_length=31)
     slug         = models.SlugField()
     description  = models.TextField()
-    founded_date = models.DateField()
+    founded_date = models.DateField(help_text='Date format: DD/MM/YYYY')
     contact      = models.EmailField(max_length=254)
     website      = models.URLField()
     tags         = models.ManyToManyField(Tag)
@@ -77,5 +77,5 @@ class NewsLink(models.Model):
         ordering      = ['-pub_date']
         get_latest_by = 'pub_date'
 
-	def __str__(self):
-		return f'{self.title} >> {self.startup}'
+    def __str__(self):
+        return f'{self.title} >> {self.startup}'
