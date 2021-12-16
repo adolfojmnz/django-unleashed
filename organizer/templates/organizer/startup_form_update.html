@@ -10,12 +10,13 @@
 
 {% block content %}
 	<div>
-		<div>
-			<form action="{{ startup.get_update_url }}" method="POST">
-				{% csrf_token %}
-				{{ form.as_p }}
-				<button type="submit">Update</button>
-			</form>
-		</div>
+		<form action="{{ startup.get_update_url }}" method="POST">
+			{% csrf_token %}
+			<table>
+				{{ form.as_table }}
+			</table><br>
+			<button type="submit">Update</button>
+		</form>
+		<a href="{{ startup.get_absolute_url }}"><button>Cancel</button></a>
 	</div>
 {% endblock %}

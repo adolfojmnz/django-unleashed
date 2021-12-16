@@ -10,12 +10,13 @@
 
 {% block content %}
 	<div>
-		<div>
-			<form action="{{ tag.get_update_url }}" method="POST">
-				{% csrf_token %}
+		<form action="{{ tag.get_update_url }}" method="POST">
+			{% csrf_token %}
+			<p>
 				{{ form.as_p }}
-				<button type="submit">Update</button>
-			</form>
-		</div>
+			</p><br>
+			<button type="submit">Update</button>
+		</form>
+		<a href="{{ tag.get_absolute_url }}"><button>Cancel</button></a>
 	</div>
 {% endblock %}
