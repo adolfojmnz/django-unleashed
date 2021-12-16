@@ -1,6 +1,5 @@
-from django.urls import reverse
 from django.views.generic import View
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Tag, Startup, NewsLink
@@ -14,17 +13,14 @@ def homepage(request):
 
 def tag_list(request):
     template_name = 'organizer/tag_list.html'
-    context       = {'tag_list': Tag.objects.all()}
+    context = {'tag_list': Tag.objects.all()}
     return render(request, template_name, context)
 
 
 def tag_detail(request, slug):
-    if slug == 'create':
-        return tag_create(request)
-    else:
-        template_name = 'organizer/tag_detail.html'
-        context = {'tag': get_object_or_404(Tag, slug__iexact=slug)}
-        return render(request, template_name, context)
+    template_name = 'organizer/tag_detail.html'
+    context = {'tag': get_object_or_404(Tag, slug__iexact=slug)}
+    return render(request, template_name, context)
 
 
 class TagCreate(View):
@@ -130,7 +126,7 @@ class StartupUpdate(View):
         except Startup.DoesNotExist:
             return StartupCreate.get(request, slug)
         context = {
-            'startup': Startup.objects.get(slug__iexact=slug),
+            'startup': startup,
             'form': self.form_class()
         }
         return render(request, self.template_name, context)
@@ -145,7 +141,7 @@ class StartupUpdate(View):
                 'startup': Startup.objects.get(slug__iexact=slug),
                 'form': form
             }
-        return render(request, template_name, context)
+        return render(request, self.template_name, context)
 
 
 class StartupDelete(View):
