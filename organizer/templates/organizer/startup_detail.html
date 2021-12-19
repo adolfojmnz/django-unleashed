@@ -32,24 +32,27 @@
 		<br>
 	</dl>
 
+	<h3>Recent News</h3>
 	{% if startup.newslink_set.exists %}
 	<section>
-		<h3>Recent News</h3>
 		<ul>
 			{% for newslink in startup.newslink_set.all %}
 			<li>
-				<a href="{{ newslink.link }}">{{ newslink.title|title }}</a>
+				<a href="{{ newslink.link }}" target="_blank">{{ newslink.title|title }}</a>
 			</li>
 			{% endfor %}
 		</ul>
 	</section>
 	{% endif %}
+	<div>
+		<a href="{% url 'newslink_create' %}"><button>Add +</button></a>
+	</div>
 
-	{% if startup.blog_post.exists %}
+	{% if startup.blog_posts.exists %}
 	<section>
 		<h3>Blog Post{{ startup.blog_posts.count|pluralize }}</h3>
 		<ul>
-			{% for post in startup.blog_post.all %}
+			{% for post in startup.blog_posts.all %}
 			<li>
 				<a href="{{ post.get_absolute_url }}">
 					{{ post.title|title }}
@@ -60,6 +63,7 @@
 	</section>
 	{% endif %}
 </article>
+<br>
 <div>
 	<a href="{{ startup.get_update_url }}"><button>Edit</button></a>
 	<a href="{{ startup.get_delete_url }}"><button>Delete</button></a>
