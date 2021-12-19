@@ -1,4 +1,4 @@
-{% extends parent_template|default:"organizer/base_organizer" %}
+{% extends parent_template|default:"blog/base_blog.html" %}
 
 {% block title %}
 	{{ block.super }} - Create A Post Model
@@ -10,12 +10,13 @@
 
 {% block content %}
 	<div>
-		<div>
-			<form action="{{ post.get_create_url }}" method="POST">
-				{% csrf_token %}
+		<form action="{{ post.get_create_url }}" method="POST">
+			{% csrf_token %}
+			<p>
 				{{ form.as_p }}
-				<button type="submit">Create</button>
-			</form>
-		</div>
+			</p>
+			<button type="submit">Create</button>
+		</form>
+		<a href="{% url 'post_list' %}"><button>Cancel</button></a>
 	</div>
 {% endblock %}
