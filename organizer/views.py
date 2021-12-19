@@ -1,9 +1,10 @@
+from django.shortcuts import render
 from django.views.generic import View
-from django.http import Http404
-from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Tag, Startup, NewsLink
-from .forms import TagForm, StartupForm, NewsLink
+from .forms import TagForm, StartupForm, NewsLinkForm
+
+from .utils import CreateObjectMixin, UpdateObjectMixin, DeleteObjectMixin
 
 
 def homepage(request):
@@ -23,69 +24,6 @@ def tag_detail(request, slug):
     return render(request, template_name, context)
 
 
-class TagCreate(View):
-    form_class = TagForm
-    template_name = 'organizer/tag_form_create.html'
-
-    def get(self, request):
-        context = {'form': self.form_class()}
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            new_tag = form.save()
-            return redirect(new_tag)
-        else:
-            context ={'form': form}
-        return render(request, self.template_name, context)
-
-
-class TagUpdate(View):
-    form_class = TagForm
-    template_name = 'organizer/tag_form_update.html'
-
-    def get(self, request, slug):
-        context = {
-            'tag': Tag.objects.get(slug__iexact=slug),
-            'form': self.form_class()
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request, slug):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            updated_tag = form.save()
-            return redirect(updated_tag)
-        else:
-            context = {
-                'tag': Tag.objects.get(slug__iexact=slug),
-                'form': form
-            }
-        return render(request, self.template_name, context)
-
-
-class TagDelete(View):
-    form_class = TagForm
-    template_name = 'organizer/tag_form_delete.html'
-
-    def get(self, request, slug):
-        context = {
-            'tag': Tag.objects.get(slug__iexact=slug),
-            'form': self.form_class()
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request, slug):
-        try:
-            tag = Tag.objects.get(slug__iexact=slug)
-        except Tag.DoesNotExist:
-            raise Http404(f'Tag For {slug} Was Not Found!')
-        if tag:
-            tag.delete()
-            return redirect(tag_list)
-
-
 def startup_list(request):
     template_name = 'organizer/startup_list.html'
     context       = {'startup_list': Startup.objects.all()}
@@ -98,71 +36,47 @@ def startup_detail(request, slug):
     return render(request, template_name, context)
 
 
-class StartupCreate(View):
+class TagCreate(View, CreateObjectMixin):
+    form_class = TagForm
+    template_name = 'organizer/tag_form_create.html'
+    model_name = 'tag'
+
+
+class TagUpdate(View, UpdateObjectMixin):
+    form_class = TagForm
+    template_name = 'organizer/tag_form_update.html'
+    model = Tag
+    model_name = 'tag'
+
+
+class TagDelete(View, DeleteObjectMixin):
+    form_class = TagForm
+    template_name = 'organizer/tag_form_delete.html'
+    model = Tag
+    model_name = 'tag'
+
+
+class StartupCreate(View, CreateObjectMixin):
     form_class = StartupForm
     template_name = 'organizer/startup_form_create.html'
-
-    def get(self, request):
-        context = {'form': self.form_class()}
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            new_startup = form.save()
-            return redirect(new_startup)
-        else:
-            context = {'form': form}
-        return render(request, self.template_name, context)
+    model_name = 'startup'
 
 
-class StartupUpdate(View):
+class StartupUpdate(View, UpdateObjectMixin):
     form_class = StartupForm
     template_name = 'organizer/startup_form_update.html'
-
-    def get(self, request, slug):
-        try:
-            startup = Startup.objects.get(slug__iexact=slug)
-        except Startup.DoesNotExist:
-            return StartupCreate.get(request, slug)
-        context = {
-            'startup': startup,
-            'form': self.form_class()
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request, slug):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            updated_startup = form.save()
-            return redirect(updated_startup)
-        else:
-            context = {
-                'startup': Startup.objects.get(slug__iexact=slug),
-                'form': form
-            }
-        return render(request, self.template_name, context)
+    model = Startup
+    model_name = 'startup'
 
 
-class StartupDelete(View):
+class StartupDelete(View, DeleteObjectMixin):
     form_class = StartupForm
     template_name = 'organizer/startup_form_delete.html'
+    model = Startup
+    model_name = 'startup'
 
-    def get(self, request, slug):
-        context = {
-            'startup': Startup.objects.get(slug__iexact=slug),
-            'form': self.form_class()
-        }
-        return render(request, self.template_name, context)
 
-    def post(self, request, slug):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            form.delete()
-            return redirect(startup_list)
-        else:
-            context = {
-                'startup': Startup.objects.get(slug__iexact=slug),
-                'form': form
-            }
-        return render(request, self.template_name, context)
+class NewsLinkCreate(View, CreateObjectMixin):
+    form_class = NewsLinkForm
+    template_name = 'organizer/newslink_form_create.html'
+    model_name = 'newslink'
