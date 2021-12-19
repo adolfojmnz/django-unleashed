@@ -2,10 +2,11 @@ from django.urls import path
 
 from .views import (
 		homepage,
-		TagCreate, TagUpdate, TagDelete,
 		tag_list, tag_detail,
-		StartupCreate, StartupUpdate, StartupDelete,
 		startup_list, startup_detail,
+		NewsLinkCreate,
+		TagCreate, TagUpdate, TagDelete,
+		StartupCreate, StartupUpdate, StartupDelete,
 )
 
 
@@ -19,6 +20,9 @@ urlpatterns = [
         path('startup/create/', StartupCreate.as_view(), name='startup_create'),
         path('startup/<slug:slug>/update/', StartupUpdate.as_view(), name='startup_update'),
         path('startup/<slug:slug>/delete/', StartupDelete.as_view(), name='startup_delete'),
+
+		# CBV for NewsLink model
+		path('newslink/create/', NewsLinkCreate.as_view(), name='newslink_create'),
 
         # Function Views for Tag model
         path('tag/', tag_list, name='tag_list'),
