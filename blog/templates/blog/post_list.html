@@ -1,33 +1,39 @@
 {% extends parent_template|default:"blog/blog_base.html" %}
 
 {% block title %}
-{{ block.super }} - Blog
+	{{ block.super }} - Blog
 {% endblock %}
 
 {% block content %}
-{% for post in post_list %}
-<article>
-	<header>
-		<h2>
-			<a href="{{ post.get_absolute_url }}">
-				{{ post.title|title }}
-			</a>
-		</h2>
-		<p>
-			Writing on
-			<time datetime="{{ post.pub_date|date:"Y-m-d" }}">
-				{{ post.pub_date|date:"l, F j, Y" }}
-			</time>
-		</p>
-	</header>
-	<p>{{ post.text|truncatewords:20 }}</p>
+	{% for post in post_list %}
+		<article>
+			<header>
+				<h2>
+					<a href="{{ post.get_absolute_url }}">
+						{{ post.title|title }}
+					</a>
+				</h2>
+				<p>
+					Writing on
+					<time datetime="{{ post.pub_date|date:"Y-m-d" }}">
+						{{ post.pub_date|date:"l, F j, Y" }}
+					</time>
+				</p>
+			</header>
+
+			<p>{{ post.text|truncatewords:20 }}</p>
+			<p>
+				<a href="{{ post.get_absolute_url }}">
+					Read more&hellip;
+				</a>
+			</p>
+		</article>
+
+	{% empty %}
+		<p><em>No blob post available</em></p>
+	{% endfor %}
+
 	<p>
-		<a href="{{ post.get_absolute_url }}">
-			Read more&hellip;
-		</a>
+		<a href="{% url 'post_create' %}">Add +</a>
 	</p>
-</article>
-{% empty %}
-<p><em>No blob post available</em></p>
-{% endfor %}
 {% endblock %}
