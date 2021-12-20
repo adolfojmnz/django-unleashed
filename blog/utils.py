@@ -3,23 +3,28 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PostForm
 
 
-class MethodsForHttpRequestsMixin:
-	form_class    = None
-	model 	      = None
-	model_name    = ''
-	template_name = ''
+class GetObjectMixin:
+	model = None
 
 	def get_model_object(self, year, month, slug):
 		try:
-			object = get_object_or_404(
-				self.model,
-				pub_date__year  = year,
-				pub_date__month = month,
-				slug__iexact    = slug
+			return (
+				get_object_or_404(
+					self.model,
+					pub_date__year  = year,
+					pub_date__month = month,
+					slug__iexact    = slug
+				)
 			)
-			return object
 		except self.model.DoesNotExist:
 			raise self.model.DoesNotExist
+
+
+class MethodsForHttpRequestsMixin(GetObjectMixin):
+	form_class    = None
+	model 	      = None
+	context_name    = ''
+	template_name = ''
 
 	def get_without_object(self, request):
 		context = {
@@ -31,7 +36,7 @@ class MethodsForHttpRequestsMixin:
 		try:
 			context = {
 				'form': self.form_class(),
-				'self.model_name': self.get_model_object(year, month, slug)
+				f'{self.context_name}': self.get_model_object(year, month, slug)
 			}
 			return render(request, self.template_name, context)
 		except self.model.DoesNotExist:
@@ -55,17 +60,42 @@ class MethodsForHttpRequestsMixin:
 			try:
 				context = {
 					'form': form,
-					'self.model_name': self.get_model_object(year, month, slug),
+					f'{self.context_name}': self.get_model_object(year, month, slug),
 				}
 				return render(request, self.template_name, context)
-			except self.model_name.DoesNotExist:
+			except self.model.DoesNotExist:
 				raise Http404(f'{request.HTTP_REFERER} not found!')
 
 	def post_delete(self, request, year, month, slug):
 		try:
 			self.get_model_object(year, month, slug).delete()
-			return redirect(f'{self.model_name}_list')
-		except self.model_name.DoesNotExist:
+			return redirect(f'{self.context_name}')
+		except self.model.DoesNotExist:
+			raise Http404(f'{request.HTTP_REFERER} not found!')
+
+
+class ObjectListMixin:
+	model = None
+	context_name = ''
+	template_name = ''
+
+	def get(self, request):
+		context = {
+			f'{self.context_name}': self.model.objects.all()
+		}
+		return render(request, self.template_name, context)
+
+class ObjectDetailMixin(GetObjectMixin):
+	context_name = ''
+	template_name = ''
+
+	def get(self, request, year, month, slug):
+		try:
+			context = {
+				f'{self.context_name}': self.get_model_object(year, month, slug)
+			}
+			return render(request, self.template_name, context)
+		except self.model.DoesNotExist:
 			raise Http404(f'{request.HTTP_REFERER} not found!')
 
 
