@@ -1,39 +1,37 @@
-from django.shortcuts import render
 from django.views.generic import View
+from django.shortcuts import render, get_object_or_404
 
 from .models import Tag, Startup, NewsLink
 from .forms import TagForm, StartupForm, NewsLinkForm
 
-from .utils import CreateObjectMixin, UpdateObjectMixin, DeleteObjectMixin
+from .utils import (
+	ObjectListMixin, ObjectDetailMixin,
+	CreateObjectMixin, UpdateObjectMixin, DeleteObjectMixin,
+)
 
 
-def homepage(request):
-    template_name = 'organizer/homepage.html'
-    return render(request, template_name)
+class TagList(View, ObjectListMixin):
+	model = Tag
+	context_name = 'tag_list'
+	template_name = 'organizer/tag_list.html'
 
 
-def tag_list(request):
-    template_name = 'organizer/tag_list.html'
-    context = {'tag_list': Tag.objects.all()}
-    return render(request, template_name, context)
+class TagDetail(View, ObjectDetailMixin):
+	model = Tag
+	context_name = 'tag'
+	template_name = 'organizer/tag_detail.html'
 
 
-def tag_detail(request, slug):
-    template_name = 'organizer/tag_detail.html'
-    context = {'tag': get_object_or_404(Tag, slug__iexact=slug)}
-    return render(request, template_name, context)
+class StartupList(View, ObjectListMixin):
+	model = Startup
+	context_name = 'startup_list'
+	template_name = 'organizer/startup_list.html'
 
 
-def startup_list(request):
-    template_name = 'organizer/startup_list.html'
-    context       = {'startup_list': Startup.objects.all()}
-    return render(request, template_name, context)
-
-
-def startup_detail(request, slug):
-    template_name = 'organizer/startup_detail.html'
-    context = {'startup': get_object_or_404(Startup, slug__iexact=slug)}
-    return render(request, template_name, context)
+class StartupDetail(View, ObjectDetailMixin):
+	model = Startup
+	context_name = 'startup'
+	template_name = 'organizer/startup_detail.html'
 
 
 class TagCreate(View, CreateObjectMixin):
