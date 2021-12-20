@@ -63,6 +63,35 @@ class MethodsForHttpRequestsMixin:
             raise Http404(f'Object for slug "{slug}" does not exist!')
 
 
+class ObjectListMixin:
+	model = None
+	context_name = ''
+	template_name = ''
+
+	def get(self, request):
+		context = {
+			f'{self.context_name}': self.model.objects.all()
+		}
+		return render(request, self.template_name, context)
+
+
+class ObjectDetailMixin:
+	model = None
+	context_name = ''
+	template_name = ''
+
+	def get(self, request, slug):
+		try:
+			context = {
+			 	f'{self.context_name}': get_object_or_404(
+					self.model, slug__iexact=slug
+				)
+			}
+			return render(request, self.template_name, context)
+		except self.model.DoesNotExist:
+			raise Http404(f'{request.HTTP_REFERER} not found!')
+
+
 class CreateObjectMixin(MethodsForHttpRequestsMixin):
 
     def post(self, request):
