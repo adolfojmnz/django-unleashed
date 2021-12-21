@@ -1,110 +1,93 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404
 
 
-class MethodsForHttpRequestsMixin:
-    model         = None
-    form_class    = None
-    template_name = ''
-    model_name    = ''
+class GetObjectMixin:
 
     def get_model_object(self, slug):
         try:
-            object = get_object_or_404(self.model, slug__iexact=slug)
-            return object
-        except self.model.DoesNotExist:
-            raise self.model.DoesNotExist
+            return get_object_or_404(
+                self.model,
+                slug__iexact = slug
+            )
+        except Http404:
+            raise Http404('Object Not Found!')
 
-    def get(self, request, slug=None):
-        if slug is not None:
-            try:
+
+class MethodsForHttpRequestsMixin(GetObjectMixin):
+    model         = None
+    form_class    = None
+    template_name = ''
+    context_name  = ''
+    redirect_to   = ''
+
+    def get(self, request, **kwargs):
+        if kwargs:
+            object = self.get_model_object(**kwargs)
+            if self.form_class:
                 context = {
-                    'form': self.form_class(),
-                    f'{self.model_name}': self.get_model_object(slug)
+                    'form': self.form_class(instance=object),
+                    f'{self.context_name}': object
                 }
-                return render(request, self.template_name, context)
-            except self.model.DoesNotExist:
-                raise Http404(f'Object for slug "{slug}" does not exist!')
+            else:
+                context = {
+                    f'{self.context_name}': object
+                }
         else:
             context = {
                 'form': self.form_class()
             }
-            return render(request, self.template_name, context)
+        return render(request, self.template_name, context)
 
-
-    def post_create(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            new_object = form.save()
-            return redirect(new_object)
-        else:
-            context = {'form': form}
-            return render(request, self.template_name, context)
-
-    def post_update(self, request, slug):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            updated_object = form.save()
-            return redirect(updated_object)
-        else:
-            try:
+    def post(self, request, **kwargs):
+        if kwargs:
+            object = self.get_model_object(**kwargs)
+            form = self.form_class(request.POST, instance=object)
+            if form.is_valid():
+                updated_object = form.save()
+                return redirect(updated_object)
+            else:
                 context = {
                     'form': form,
-                    'self.model_name': self.get_model_object(slug),
+                    f'{self.context_name}': object
                 }
                 return render(request, self.template_name, context)
-            except self.model_name.DoesNotExist:
-                raise Http404(f'Object for slug "{slug}" does not exist!')
+        else:
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                new_object = form.save()
+                return redirect(new_object)
+            else:
+                context = {'form': form}
+                return render(request, self.template_name, context)
 
-    def post_delete(self, request, slug):
-        try:
-            self.get_model_object(slug).delete()
-            return redirect(f'{self.model_name}_list')
-        except self.model_name.DoesNotExist:
-            raise Http404(f'Object for slug "{slug}" does not exist!')
+    def post_delete(self, request, **kwargs):
+        self.get_model_object(**kwargs).delete()
+        return redirect(self.redirect_to)
 
 
 class ObjectListMixin:
-	model = None
-	context_name = ''
-	template_name = ''
 
-	def get(self, request):
-		context = {
-			f'{self.context_name}': self.model.objects.all()
-		}
-		return render(request, self.template_name, context)
+    def get(self, request):
+        context = {
+            f'{self.context_name}': self.model.objects.all()
+        }
+        return render(request, self.template_name, context)
 
 
-class ObjectDetailMixin:
-	model = None
-	context_name = ''
-	template_name = ''
-
-	def get(self, request, slug):
-		try:
-			context = {
-			 	f'{self.context_name}': get_object_or_404(
-					self.model, slug__iexact=slug
-				)
-			}
-			return render(request, self.template_name, context)
-		except self.model.DoesNotExist:
-			raise Http404(f'{request.HTTP_REFERER} not found!')
+class ObjectDetailMixin(MethodsForHttpRequestsMixin):
+    pass
 
 
 class CreateObjectMixin(MethodsForHttpRequestsMixin):
-
-    def post(self, request):
-        return self.post_create(request)
+    pass
 
 
 class UpdateObjectMixin(MethodsForHttpRequestsMixin):
-
-    def post(self, request, slug):
-        return self.post_update(request, slug)
+    pass
 
 
 class DeleteObjectMixin(MethodsForHttpRequestsMixin):
 
-    def post(self, request, slug):
-        return self.post_delete(request, slug)
+    def post(self, request, **kwargs):
+        return self.post_delete(request, **kwargs)
