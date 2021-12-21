@@ -27,19 +27,19 @@ class PostDetail(View, ObjectDetailMixin):
 class PostCreate(View, CreateObjectMixin):
     form_class    = PostForm
     model         = Post
-    context_name    = 'post'
     template_name = 'blog/post_form_create.html'
 
 
 class PostUpdate(View, UpdateObjectMixin):
     form_class    = PostForm
     model         = Post
-    context_name    = 'post'
+    context_name  = 'post'
     template_name = 'blog/post_form_update.html'
 
 
 class PostDelete(View, DeleteObjectMixin):
     form_class    = PostForm
     model         = Post
-    context_name    = 'post'
+    context_name  = 'post'
+    redirect_to   = 'post_list'
     template_name = 'blog/post_form_delete.html'
