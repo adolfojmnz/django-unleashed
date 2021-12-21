@@ -74,7 +74,13 @@ class NewsLink(models.Model):
         get_latest_by = 'pub_date'
 
     def get_absolute_url(self):
-        return self.startup.get_absolute_url()
+        return reverse('newslink_detail', kwargs={'pk': self.pk})
+
+    def get_update_url(self):
+        return reverse('newslink_update', kwargs={'pk': self.pk})
+
+    def get_delete_url(self):
+        return reverse('newslink_delete', kwargs={'pk': self.pk})
 
     def __str__(self):
         return f'{self.title} >> {self.startup}'
