@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404
 
 from .forms import PostForm
 
@@ -16,31 +17,28 @@ class GetObjectMixin:
 					slug__iexact    = slug
 				)
 			)
-		except self.model.DoesNotExist:
-			raise self.model.DoesNotExist
+		except Http404:
+			raise Http404(f'Object not found!')
 
 
 class MethodsForHttpRequestsMixin(GetObjectMixin):
 	form_class    = None
 	model 	      = None
-	context_name    = ''
+	context_name  = ''
 	template_name = ''
 
-	def get_without_object(self, request):
-		context = {
-			'form': self.form_class()
-		}
-		return render(request, self.template_name, context)
-
-	def get(self, request, year, month, slug):
-		try:
+	def get(self, request, **kwargs):
+		if kwargs:
+			object = self.get_model_object(**kwargs)
 			context = {
-				'form': self.form_class(),
-				f'{self.context_name}': self.get_model_object(year, month, slug)
+				'form': self.form_class(instance=object),
+				f'{self.context_name}': object
 			}
-			return render(request, self.template_name, context)
-		except self.model.DoesNotExist:
-			raise Http404(f'{request.HTTP_REFERER} not found!')
+		else:
+			context = {
+				'form': self.form_class()
+			}
+		return render(request, self.template_name, context)
 
 	def post_create(self, request):
 		form = self.form_class(request.POST)
@@ -51,27 +49,22 @@ class MethodsForHttpRequestsMixin(GetObjectMixin):
 			context = {'form': form}
 			return render(request, self.template_name, context)
 
-	def post_update(self, request, year, month, slug):
-		form = self.form_class(request.POST)
+	def post_update(self, request, **kwargs):
+		object = self.get_model_object(**kwargs)
+		form = self.form_class(request.POST, instance=object)
 		if form.is_valid():
 			updated_object = form.save()
 			return redirect(updated_object)
 		else:
-			try:
-				context = {
-					'form': form,
-					f'{self.context_name}': self.get_model_object(year, month, slug),
-				}
-				return render(request, self.template_name, context)
-			except self.model.DoesNotExist:
-				raise Http404(f'{request.HTTP_REFERER} not found!')
+			context = {
+				'form': form,
+				f'{self.context_name}': object
+			}
+			return render(request, self.template_name, context)
 
-	def post_delete(self, request, year, month, slug):
-		try:
-			self.get_model_object(year, month, slug).delete()
-			return redirect(f'{self.context_name}')
-		except self.model.DoesNotExist:
-			raise Http404(f'{request.HTTP_REFERER} not found!')
+	def post_delete(self, request, **kwargs):
+		self.get_model_object(**kwargs).delete()
+		return redirect(f'{self.context_name}')
 
 
 class ObjectListMixin:
@@ -85,24 +78,19 @@ class ObjectListMixin:
 		}
 		return render(request, self.template_name, context)
 
+
 class ObjectDetailMixin(GetObjectMixin):
 	context_name = ''
 	template_name = ''
 
-	def get(self, request, year, month, slug):
-		try:
-			context = {
-				f'{self.context_name}': self.get_model_object(year, month, slug)
-			}
-			return render(request, self.template_name, context)
-		except self.model.DoesNotExist:
-			raise Http404(f'{request.HTTP_REFERER} not found!')
+	def get(self, request, **kwargs):
+		context = {
+			f'{self.context_name}': self.get_model_object(**kwargs)
+		}
+		return render(request, self.template_name, context)
 
 
 class CreateObjectMixin(MethodsForHttpRequestsMixin):
-
-	def get(self, request):
-		return self.get_without_object(request)
 
 	def post(self, request):
 		return self.post_create(request)
@@ -110,11 +98,11 @@ class CreateObjectMixin(MethodsForHttpRequestsMixin):
 
 class UpdateObjectMixin(MethodsForHttpRequestsMixin):
 
-	def post(self, request, year, month, slug):
-		return self.post_update(request, year, month, slug)
+	def post(self, request, **kwargs):
+		return self.post_update(request, **kwargs)
 
 
 class DeleteObjectMixin(MethodsForHttpRequestsMixin):
 
-	def post(self, request, year, month, slug):
-		return self.post_delete(request, year, month, slug)
+	def post(self, request, **kwargs):
+		return self.post_delete(request, **kwargs)
