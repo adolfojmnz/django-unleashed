@@ -38,7 +38,7 @@
 		<ul>
 			{% for newslink in startup.newslink_set.all %}
 			<li>
-				<a href="{{ newslink.link }}" target="_blank">{{ newslink.title|title }}</a>
+				<a href="{{ newslink.get_absolute_url }}">{{ newslink.title|title }}</a>
 			</li>
 			{% endfor %}
 		</ul>
