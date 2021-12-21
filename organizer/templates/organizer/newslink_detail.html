@@ -1,0 +1,30 @@
+{% extends parent_template|default:"organizer/base_organizer.html" %}
+
+{% block title %}
+	{{ block.super }} - NewsLink Details
+{% endblock %}
+
+{% block heading %}
+	NewsLink Details
+{% endblock %}
+
+{% block content %}
+	<div>
+		<h2>{{ newslink.title|title }}</h2>
+		<p>
+			Published on: {{ newslink.pub_date }}<br>
+			Startup:
+				<a href="{{ newslink.startup.get_absolute_url }}">
+					{{ newslink.startup }}
+				</a><br>
+			Website:
+				<a href="{{ newslink.link }}" target="_blank">
+					{{ newslink.link }}
+				</a>
+		</p>
+	</div>
+	<div>
+		<a href="{{ newslink.get_update_url }}"><button>Edit</button></a>
+		<a href="{{ newslink.get_delete_url }}"><button>Delete</button></a>
+	</div>
+{% endblock %}
