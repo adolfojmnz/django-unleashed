@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-		NewsLinkCreate,
+		NewsLinkCreate, NewsLinkDetail, NewsLinkUpdate, NewsLinkDelete,
 		TagList, TagDetail, TagCreate, TagUpdate, TagDelete,
 		StartupList, StartupDetail, StartupCreate, StartupUpdate, StartupDelete,
 )
@@ -24,4 +24,7 @@ urlpatterns = [
 
 		# CBV for NewsLink model
 		path('newslink/create/', NewsLinkCreate.as_view(), name='newslink_create'),
+		path('newslink/<int:pk>/', NewsLinkDetail.as_view(), name='newslink_detail'),
+		path('newslink/<int:pk>/update/', NewsLinkUpdate.as_view(), name='newslink_update'),
+		path('newslink/<int:pk>/delete/', NewsLinkDelete.as_view(), name='newslink_delete'),
 ]
