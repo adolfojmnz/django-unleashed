@@ -80,3 +80,24 @@ class NewsLinkCreate(View, CreateObjectMixin):
     model = NewsLink
     form_class = NewsLinkForm
     template_name = 'organizer/newslink_form_create.html'
+
+
+class NewsLinkDetail(View, ObjectDetailMixin):
+    model = NewsLink
+    context_name = 'newslink'
+    template_name = 'organizer/newslink_detail.html'
+
+
+class NewsLinkUpdate(View, UpdateObjectMixin):
+    model = NewsLink
+    form_class = NewsLinkForm
+    context_name = 'newslink'
+    template_name = 'organizer/newslink_form_update.html'
+
+
+class NewsLinkDelete(View, DeleteObjectMixin):
+    model = NewsLink
+    form_class = NewsLinkForm
+    context_name = 'newslink'
+    redirect_to = 'startup_list'
+    template_name = 'organizer/newslink_form_delete.html'
