@@ -4,11 +4,11 @@ from django.http import Http404
 
 class GetObjectMixin:
 
-    def get_model_object(self, slug):
+    def get_model_object(self, **kwargs):
         try:
             return get_object_or_404(
                 self.model,
-                slug__iexact = slug
+                **kwargs
             )
         except Http404:
             raise Http404('Object Not Found!')
