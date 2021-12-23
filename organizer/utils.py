@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 
 
 class GetObjectMixin:
@@ -18,7 +18,6 @@ class MethodsForHttpRequestsMixin(GetObjectMixin):
     model         = None
     form_class    = None
     template_name = ''
-    context_name  = ''
     redirect_to   = ''
 
     def get(self, request, **kwargs):
@@ -27,11 +26,11 @@ class MethodsForHttpRequestsMixin(GetObjectMixin):
             if self.form_class:
                 context = {
                     'form': self.form_class(instance=object),
-                    f'{self.context_name}': object
+                    self.model.__name__.lower(): object
                 }
             else:
                 context = {
-                    f'{self.context_name}': object
+                    self.model.__name__.lower(): object
                 }
         else:
             context = {
@@ -49,7 +48,7 @@ class MethodsForHttpRequestsMixin(GetObjectMixin):
             else:
                 context = {
                     'form': form,
-                    f'{self.context_name}': object
+                    self.model.__name__.lower(): object
                 }
                 return render(request, self.template_name, context)
         else:
@@ -62,7 +61,13 @@ class MethodsForHttpRequestsMixin(GetObjectMixin):
                 return render(request, self.template_name, context)
 
     def post_delete(self, request, **kwargs):
-        self.get_model_object(**kwargs).delete()
+        object = self.get_model_object(**kwargs)
+        try:
+            if object.startup:
+               self.redirect_to = object.startup
+        except AttributeError:
+            pass
+        object.delete()
         return redirect(self.redirect_to)
 
 
@@ -70,7 +75,7 @@ class ObjectListMixin:
 
     def get(self, request):
         context = {
-            f'{self.context_name}': self.model.objects.all()
+            self.context_name: self.model.objects.all()
         }
         return render(request, self.template_name, context)
 
