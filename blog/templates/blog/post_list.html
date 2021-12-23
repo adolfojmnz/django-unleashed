@@ -4,15 +4,20 @@
 	{{ block.super }} - Blog
 {% endblock %}
 
+{% block heading %}
+	Blog List
+{% endblock %}
+
 {% block content %}
+	<h2>Blog List</h2>
 	{% for post in post_list %}
 		<article>
 			<header>
-				<h2>
+				<h3>
 					<a href="{{ post.get_absolute_url }}">
 						{{ post.title|title }}
-					</a>
-				</h2>
+					</a> - <span class="edit-icon"><a href="{{ post.get_update_url }}">&#128393;</a></span>
+				</h3>
 				<p>
 					Writing on
 					<time datetime="{{ post.pub_date|date:"Y-m-d" }}">

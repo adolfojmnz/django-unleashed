@@ -16,6 +16,10 @@
 		<a href="{{ tag.get_absolute_url }}">
 			{{ tag.name|title }}
 		</a>
+		<span class="edit-delete-icon">
+			- <a href="{{ tag.get_update_url }}">&#128393;</a>
+			- <a href="{{ tag.get_delete_url }}">&#128465;</a>
+		</span>
 	</li>
 	{% empty %}
 	<li><em> There are currently no tags available.</em></li>
