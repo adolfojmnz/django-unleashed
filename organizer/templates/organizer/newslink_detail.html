@@ -12,6 +12,7 @@
 	<div>
 		<h2>{{ newslink.title|title }}</h2>
 		<p>
+			Slug: {{ newslink.slug }}<br>
 			Published on: {{ newslink.pub_date }}<br>
 			Startup:
 				<a href="{{ newslink.startup.get_absolute_url }}">
