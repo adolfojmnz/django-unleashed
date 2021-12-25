@@ -27,62 +27,14 @@ POSTS = (
 
 
 def add_blog_data(apps, schema_editor):
-	Startup = apps.get_model('organizer', 'Startup')
-	Tag = apps.get_model('organizer', 'Tag')
 	Post = apps.get_model('blog', 'Post')
-
-	tag_list = []
-	startup_list = []
-
 	for post in POSTS:
-		for tag in post.get('tags'):
-			try:
-				tag_object = Tag.objects.get(
-					slug = tag.get('slug')
-				)
-			except Tag.DoesNotExist:
-				tag_object = Tag.objects.create(
-					name = tag.get('name'),
-					slug = tag.get('slug'),
-				)
-			tag_list.append(tag_object)
-		for startup in post.get('startups'):
-			try:
-				startup_object = Startup.objects.get(
-					slug = startup.get('slug')
-				)
-			except Startup.DoesNotExist:
-				startup_object = Startup.objects.create(
-					name = startup.get('name'),
-					slug = startup.get('slug'),
-					founded_date = startup.get('founded_date')
-				)
-			startup_list.append(startup_object)
-		try:
-			post_object = Post.objects.get(
-				slug = post.get('slug')
-			)
-		except Post.DoesNotExist:
-			post_object = Post.objects.create(
-				title = post.get('title'),
-				slug = post.get('slug'),
-				text = post.get('text'),
-				pub_date = post.get('pub_date'),
-			)
-			if post_object.tags:
-				for tag in tag_list:
-					if tag not in post_object.tags:
-						post_object.tags.add(tag)
-			else:
-				for tag in tag_list:
-					post_object.tags.add(tag)
-			if post_object.startup:
-				for startup in startup_list:
-					if startup not in post_object.startup:
-						post_object.startup.add(startup)
-			else:
-				for startup in startup_list:
-					post_object.startup.add(startup)
+		post_object = Post.objects.get_or_create(
+			title = post.get('title'),
+			slug = post.get('slug'),
+			text = post.get('text'),
+			pub_date = post.get('pub_date'),
+		)[0]
 		post_object.save()
 
 
