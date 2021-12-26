@@ -1,0 +1,22 @@
+{% extends parent_template|default:"contact/base_contact.html" %}
+
+{% block title %}
+	{{ block.super }} - Contact Page
+{% endblock %}
+
+{% block heading %}
+	Contact Page
+{% endblock %}
+
+{% block content %}
+	<div>
+		<form action="{% url 'contact' %}" method="POST">
+			{% csrf_token %}
+			<table>
+				{{ form.as_table }}
+			</table>
+			<button type="submit" name="send">Send</button>
+		</form>
+		<a href="{% url 'post_list' %}"><button>Cancel</button></a>
+	</div>
+{% endblock %}
