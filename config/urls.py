@@ -3,10 +3,10 @@ from django.urls import path, include
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+	path('admin/', admin.site.urls),
 
-    path('', include('routes.urls')),
-    path('', include('blog.urls')),
-    path('', include('organizer.urls')),
+	path('', include('routes.urls')),
+	path('', include('blog.urls')),
+	path('', include('organizer.urls')),
+	path('', include('contact.urls'))
 ]
-
