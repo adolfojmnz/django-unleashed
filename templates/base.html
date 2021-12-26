@@ -29,7 +29,8 @@
 			<nav>
 				<a href="{% url 'post_list' %}">Blog</a> |
 				<a href="{% url 'startup_list' %}">Startups</a> |
-				<a href="{% url 'tag_list' %}">Tags</a>
+				<a href="{% url 'tag_list' %}">Tags</a> |
+				<a href="{% url 'contact' %}">Contact</a>
 				<br>
 			</nav>
 			{% endblock %}
@@ -39,6 +40,22 @@
 			This is default content
 			{% endblock %}
 		</main>
+	</div>
+
+	<div>
+		{% if messages %}
+			<div>
+				<ul>
+					{% for message in messages %}
+						{% if message.tags %}
+							<li class="{{ message.tags }}">{{ message }}</li>
+						{% else %}
+							<li>{{ message }}</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
 	</div>
 
 	<footer>
