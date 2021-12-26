@@ -121,7 +121,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email in Django docs
 # https://docs.djangoproject.com/en/4.0/topics/email/
-EMAIL_BACKEND = 'django.core.backends.mail.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 SERVER_EMAIL = 'contact@django-unleashed.com'
 DEFAULT_FROM_EMAIL = 'no-replay@django-unleashed.com'
 EMAIL_SUBJECT_PREFIX = '[DJANGO UNLEASHED] '
