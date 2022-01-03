@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseRedirect
 from django.core.paginator import Paginator
+from django.views.generic import View
 
 
 class PaginatorMixin:
@@ -34,63 +35,7 @@ class GetObjectMixin:
 			raise Http404('Object Not Found!')
 
 
-class MethodsForHttpRequestsMixin(GetObjectMixin):
-	model         = None
-	form_class    = None
-	template_name = ''
-	redirect_to   = ''
-
-	def get(self, request, **kwargs):
-		if kwargs:
-			object = self.get_model_object(**kwargs)
-			if self.form_class:
-				context = {
-					'form': self.form_class(instance=object),
-					self.model.__name__.lower(): object
-				}
-			else:
-				context = {
-					self.model.__name__.lower(): object
-				}
-		else:
-			context = {
-				'form': self.form_class()
-			}
-		return render(request, self.template_name, context)
-
-	def post(self, request, **kwargs):
-		if kwargs:
-			object = self.get_model_object(**kwargs)
-			form = self.form_class(request.POST, instance=object)
-			if form.is_valid():
-				updated_object = form.save()
-				return redirect(updated_object)
-			else:
-				context = {
-					'form': form,
-					self.model.__name__.lower(): object
-				}
-		else:
-			form = self.form_class(request.POST)
-			if form.is_valid():
-				new_object = form.save()
-				return redirect(new_object)
-			else:
-				context = {'form': form}
-		return render(request, self.template_name, context)
-
-	def post_delete(self, request, **kwargs):
-		object = self.get_model_object(**kwargs)
-		try:
-			if object.startup:
-			   self.redirect_to = object.startup
-		except AttributeError:
-			pass
-		object.delete()
-		return redirect(self.redirect_to)
-
-
-class ObjectListMixin(PaginatorMixin):
+class ListView(View, PaginatorMixin):
 
 	def get(self, request):
 		page = self.get_page(request)
@@ -100,19 +45,74 @@ class ObjectListMixin(PaginatorMixin):
 		return render(request, self.template_name, context)
 
 
-class ObjectDetailMixin(MethodsForHttpRequestsMixin):
-	pass
+class DetailView(View, GetObjectMixin):
+
+	def get(self, request, **kwargs):
+		object = self.get_model_object(**kwargs)
+		context = {
+			self.model.__name__.lower(): object
+		}
+		return render(request, self.template_name, context)
 
 
-class CreateObjectMixin(MethodsForHttpRequestsMixin):
-	pass
+class CreateView(View):
+
+	def get(self, request):
+		context = {
+			'form': self.form_class()
+		}
+		return render(request, self.template_name, context)
+
+	def post(self, request):
+		form = self.form_class(request.POST)
+		if form.is_valid():
+			new_object = form.save()
+			return redirect(new_object)
+		else:
+			context = {'form': form}
+		return render(request, self.template_name, context)
 
 
-class UpdateObjectMixin(MethodsForHttpRequestsMixin):
-	pass
+class UpdateView(View, GetObjectMixin):
 
-
-class DeleteObjectMixin(MethodsForHttpRequestsMixin):
+	def get(self, request, **kwargs):
+		object = self.get_model_object(**kwargs)
+		if self.form_class:
+			context = {
+				'form': self.form_class(instance=object),
+				self.model.__name__.lower(): object
+			}
+		return render(request, self.template_name, context)
 
 	def post(self, request, **kwargs):
-		return self.post_delete(request, **kwargs)
+		object = self.get_model_object(**kwargs)
+		form = self.form_class(request.POST, instance=object)
+		if form.is_valid():
+			updated_object = form.save()
+			return redirect(updated_object)
+		else:
+			context = {
+				'form': form,
+				self.model.__name__.lower(): object,
+			}
+		return render(request, self.template_name, context)
+
+
+class DeleteView(View, GetObjectMixin):
+
+	def get(self, request, **kwargs):
+		object = self.get_model_object(**kwargs)
+		context = {
+			self.model.__name__.lower(): object,
+		}
+		return render(request, self.template_name, context)
+
+	def post(self, request, **kwargs):
+		object = self.get_model_object(**kwargs)
+		try:
+			if object.startup: # if it is a NewsLink object
+			   self.redirect_to = object.startup
+		except AttributeError:
+			pass
+		object.delete()
+		return redirect(self.redirect_to)
