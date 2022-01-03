@@ -8,5 +8,6 @@ urlpatterns = [
 	path('', include('routes.urls')),
 	path('', include('blog.urls')),
 	path('', include('organizer.urls')),
-	path('', include('contact.urls'))
+	path('', include('contact.urls')),
+	path('', include('django.contrib.flatpages.urls')),
 ]
