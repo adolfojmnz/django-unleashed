@@ -14,6 +14,7 @@ from .utils import (
 
 class PostList(View, ObjectListMixin):
 	model = Post
+	paginate_by = 1
 	context_name = 'post_list'
 	template_name = 'blog/post_list.html'
 

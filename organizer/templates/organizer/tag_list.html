@@ -29,3 +29,7 @@
 	<a href="{% url 'tag_create' %}">Add +</a>
 </p>
 {% endblock %}
+
+{% block paginator %}
+	{% include "paginator_snippet.html" with object_list=tag_list %}
+{% endblock %}

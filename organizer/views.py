@@ -41,9 +41,11 @@ class TagDelete(View, DeleteObjectMixin):
 
 
 class StartupList(View, ObjectListMixin):
-    model = Startup
-    context_name = 'startup_list'
-    template_name = 'organizer/startup_list.html'
+	model = Startup
+	paginate_by = 1
+	initial_page_number = 1
+	context_name = 'startup_list'
+	template_name = 'organizer/startup_list.html'
 
 
 class StartupDetail(View, ObjectDetailMixin):

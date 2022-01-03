@@ -1,7 +1,28 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator
 from django.http import Http404
 
 from .forms import PostForm
+
+
+
+class PaginatorMixin:
+	paginate_by = 5
+	initial_page_number = 1
+
+	def get_page(self, request):
+		paginator = Paginator(self.model.objects.all(), self.paginate_by)
+		total_pages = paginator.num_pages
+		try:
+			page_number = request.GET.get('page')
+			if int(page_number) > total_pages:
+				page_number = total_pages
+			elif int(page_number) < self.initial_page_number:
+				raise
+		except:
+			page_number = self.initial_page_number
+
+		return paginator.page(page_number)
 
 
 class GetObjectMixin:
@@ -72,11 +93,12 @@ class MethodsForHttpRequestsMixin(GetObjectMixin):
 		return redirect(self.redirect_to)
 
 
-class ObjectListMixin:
+class ObjectListMixin(PaginatorMixin):
 
 	def get(self, request):
+		page = self.get_page(request)
 		context = {
-			f'{self.context_name}': self.model.objects.all()
+			self.context_name: page,
 		}
 		return render(request, self.template_name, context)
 

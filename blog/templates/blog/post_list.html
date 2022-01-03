@@ -42,3 +42,7 @@
 		<a href="{% url 'post_create' %}">Add +</a>
 	</p>
 {% endblock %}
+
+{% block paginator %}
+	{% include "paginator_snippet.html" with object_list=post_list %}
+{% endblock %}

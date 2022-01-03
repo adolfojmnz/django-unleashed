@@ -1,5 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, HttpResponseRedirect
+from django.core.paginator import Paginator
+
+
+class PaginatorMixin:
+	paginate_by = 5
+	initial_page_number = 1
+
+	def get_page(self, request):
+		paginator = Paginator(self.model.objects.all(), self.paginate_by)
+		total_pages = paginator.num_pages
+		try:
+			page_number = request.GET.get('page')
+			if int(page_number) > total_pages:
+				page_number = total_pages
+			elif int(page_number) < self.initial_page_number:
+				raise
+		except:
+			page_number = self.initial_page_number
+
+		return paginator.page(page_number)
 
 
 class GetObjectMixin:
@@ -50,7 +70,6 @@ class MethodsForHttpRequestsMixin(GetObjectMixin):
 					'form': form,
 					self.model.__name__.lower(): object
 				}
-				return render(request, self.template_name, context)
 		else:
 			form = self.form_class(request.POST)
 			if form.is_valid():
@@ -58,7 +77,7 @@ class MethodsForHttpRequestsMixin(GetObjectMixin):
 				return redirect(new_object)
 			else:
 				context = {'form': form}
-				return render(request, self.template_name, context)
+		return render(request, self.template_name, context)
 
 	def post_delete(self, request, **kwargs):
 		object = self.get_model_object(**kwargs)
@@ -71,11 +90,12 @@ class MethodsForHttpRequestsMixin(GetObjectMixin):
 		return redirect(self.redirect_to)
 
 
-class ObjectListMixin:
+class ObjectListMixin(PaginatorMixin):
 
 	def get(self, request):
+		page = self.get_page(request)
 		context = {
-			self.context_name: self.model.objects.all()
+			self.context_name: page,
 		}
 		return render(request, self.template_name, context)
 

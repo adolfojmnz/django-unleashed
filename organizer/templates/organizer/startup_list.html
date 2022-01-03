@@ -25,3 +25,7 @@
 	<a href="{% url 'startup_create' %}">Add +</a>
 </p>
 {% endblock %}
+
+{% block paginator %}
+	{% include "paginator_snippet.html" with object_list=startup_list %}
+{% endblock %}
