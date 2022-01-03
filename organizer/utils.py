@@ -36,6 +36,9 @@ class GetObjectMixin:
 
 
 class ListView(View, PaginatorMixin):
+	"""
+		model, context_name and template_name need to be defined.
+	"""
 
 	def get(self, request):
 		page = self.get_page(request)
@@ -46,6 +49,9 @@ class ListView(View, PaginatorMixin):
 
 
 class DetailView(View, GetObjectMixin):
+	"""
+		model and template_name need to be defined.
+	"""
 
 	def get(self, request, **kwargs):
 		object = self.get_model_object(**kwargs)
@@ -56,6 +62,9 @@ class DetailView(View, GetObjectMixin):
 
 
 class CreateView(View):
+	"""
+		template_name and form_class need to be defined.
+	"""
 
 	def get(self, request):
 		context = {
@@ -74,6 +83,9 @@ class CreateView(View):
 
 
 class UpdateView(View, GetObjectMixin):
+	"""
+		model, template_name and form_class need to be defined.
+	"""
 
 	def get(self, request, **kwargs):
 		object = self.get_model_object(**kwargs)
@@ -99,6 +111,9 @@ class UpdateView(View, GetObjectMixin):
 
 
 class DeleteView(View, GetObjectMixin):
+	"""
+		model, template_name and redirect_to need to be defined.
+	"""
 
 	def get(self, request, **kwargs):
 		object = self.get_model_object(**kwargs)
