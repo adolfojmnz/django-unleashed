@@ -1,0 +1,11 @@
+body {
+	background: #1d2021;
+	color: rgb(232, 230, 227);
+}
+a {
+	color: #3391ff;
+}
+li {
+	display: list-item;
+	list-style: none;
+}

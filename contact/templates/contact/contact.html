@@ -9,12 +9,12 @@
 {% endblock %}
 
 {% block content %}
-	<div>
+	<div class="text-center">
 		<form action="{% url 'contact' %}" method="POST">
 			{% csrf_token %}
-			<table>
-				{{ form.as_table }}
-			</table>
+
+			<p>{{ form.as_p }}</p>
+
 			<button type="submit" name="send">Send</button>
 		</form>
 		<a href="{% url 'post_list' %}"><button>Cancel</button></a>
