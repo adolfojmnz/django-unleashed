@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404, HttpResponseRedirect
 from django.core.paginator import Paginator
 from django.views.generic import View
@@ -23,7 +24,7 @@ class PaginatorMixin:
 		return paginator.page(page_number)
 
 
-class GetObjectMixin:
+class ConfigGCBV:
 
 	def get_model_object(self, **kwargs):
 		try:
@@ -34,29 +35,47 @@ class GetObjectMixin:
 		except Http404:
 			raise Http404('Object Not Found!')
 
+	def get_context_object_name(self):
+		try:
+			if self.context_object_name:
+				return self.context_object_name
+		except AttributeError:
+			try:
+				return self.model._meta.model_name
+			except AttributeError:
+				raise ImproperlyConfigured(
+					f'{self.__class__.__name__} needs model attribute'
+				)
 
-class ListView(View, PaginatorMixin):
+	def get_redirect_page_after_delete(self):
+		app_name = self.model._meta.app_label
+		model_name = self.model._meta.model_name
+		return f'{model_name}_list'
+
+
+class ListView(View, PaginatorMixin, ConfigGCBV):
 	"""
 		model, context_name and template_name need to be defined.
 	"""
 
 	def get(self, request):
+		context_object_name = self.get_context_object_name()
 		page = self.get_page(request)
 		context = {
-			self.context_name: page,
+			context_object_name: page,
 		}
 		return render(request, self.template_name, context)
 
 
-class DetailView(View, GetObjectMixin):
+class DetailView(View, ConfigGCBV):
 	"""
 		model and template_name need to be defined.
 	"""
 
 	def get(self, request, **kwargs):
-		object = self.get_model_object(**kwargs)
+		context_object_name = self.get_context_object_name()
 		context = {
-			self.model.__name__.lower(): object
+			context_object_name: self.get_model_object(**kwargs),
 		}
 		return render(request, self.template_name, context)
 
@@ -82,17 +101,18 @@ class CreateView(View):
 		return render(request, self.template_name, context)
 
 
-class UpdateView(View, GetObjectMixin):
+class UpdateView(View, ConfigGCBV):
 	"""
 		model, template_name and form_class need to be defined.
 	"""
 
 	def get(self, request, **kwargs):
 		object = self.get_model_object(**kwargs)
+		context_object_name = self.get_context_object_name()
 		if self.form_class:
 			context = {
 				'form': self.form_class(instance=object),
-				self.model.__name__.lower(): object
+				context_object_name: object,
 			}
 		return render(request, self.template_name, context)
 
@@ -103,31 +123,29 @@ class UpdateView(View, GetObjectMixin):
 			updated_object = form.save()
 			return redirect(updated_object)
 		else:
+			context_object_name = self.get_context_object_name()
 			context = {
 				'form': form,
-				self.model.__name__.lower(): object,
+				context_object_name: object,
 			}
 		return render(request, self.template_name, context)
 
 
-class DeleteView(View, GetObjectMixin):
+class DeleteView(View, ConfigGCBV):
 	"""
 		model, template_name and redirect_to need to be defined.
 	"""
 
 	def get(self, request, **kwargs):
 		object = self.get_model_object(**kwargs)
+		context_object_name = self.get_context_object_name()
 		context = {
-			self.model.__name__.lower(): object,
+			context_object_name: object,
 		}
 		return render(request, self.template_name, context)
 
 	def post(self, request, **kwargs):
+		redirect_to = self.get_redirect_page_after_delete()
 		object = self.get_model_object(**kwargs)
-		try:
-			if object.startup: # if it is a NewsLink object
-			   self.redirect_to = object.startup
-		except AttributeError:
-			pass
 		object.delete()
-		return redirect(self.redirect_to)
+		return redirect(redirect_to)

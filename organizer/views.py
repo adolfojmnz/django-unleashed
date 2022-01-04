@@ -11,7 +11,7 @@ from .utils import (
 
 class TagList(ListView):
     model = Tag
-    context_name = 'tag_list'
+    context_object_name = 'tag_list'
     template_name = 'organizer/tag_list.html'
 
 
@@ -35,15 +35,12 @@ class TagUpdate(UpdateView):
 class TagDelete(DeleteView):
     model = Tag
     form_class = TagForm
-    redirect_to  = 'tag_list'
     template_name = 'organizer/tag_form_delete.html'
 
 
 class StartupList(ListView):
 	model = Startup
-	paginate_by = 1
-	initial_page_number = 1
-	context_name = 'startup_list'
+	context_object_name = 'startup_list'
 	template_name = 'organizer/startup_list.html'
 
 
@@ -67,7 +64,6 @@ class StartupUpdate(UpdateView):
 class StartupDelete(DeleteView):
     model = Startup
     form_class = StartupForm
-    redirect_to  = 'startup_list'
     template_name = 'organizer/startup_form_delete.html'
 
 
