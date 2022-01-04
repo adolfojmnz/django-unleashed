@@ -25,14 +25,10 @@
         <li class="nav-item">
 			<a class="nav-link" href="{% url 'contact' %}">Contact</a>
         </li>
-
-		{% load flatpages %}
-		{% get_flatpages as flatpages %}
-		{% for flatpage in flatpages %}
-			<li class="nav-item">
-				<a class="nav-link" href="{{ flatpage.url }}">{{ flatpage.title }}</a>
-			</li>
-		{% endfor %}
+		<li>
+			<a class="nav-link" href="{% url 'about' %}">About</a>
+		</li>
+		
       </ul>
     </div>
   </div>

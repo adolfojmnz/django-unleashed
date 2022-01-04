@@ -24,11 +24,6 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 
-	# flatpages
-	'django.contrib.sites',
-	'django.contrib.flatpages',
-	'core',
-
 	# extensions
 	'bootstrap5',
 	'django_extensions',
@@ -48,7 +43,6 @@ MIDDLEWARE = [
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
