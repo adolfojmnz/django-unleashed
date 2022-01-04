@@ -1,0 +1,34 @@
+{% extends parent_template|default:"organizer/base_organizer.html" %}
+
+{% block title %}
+{{ block.super }} - NewsLink List
+{% endblock %}
+
+{% block heading %}
+	NewsLink List Page
+{% endblock %}
+
+{% block content %}
+<ul>
+	{% for newslink in newslink_list %}
+	<li>
+		<a href="{{ newslink.get_absolute_url }}">
+			{{ newslink.title|title }}
+		</a>
+		<span class="edit-delete-icon">
+			- <a href="{{ newslink.get_update_url }}">&#128393;</a>
+			- <a href="{{ newslink.get_delete_url }}">&#128465;</a>
+		</span>
+	</li>
+	{% empty %}
+		<li><em> There are currently no newslinks available.</em></li>
+	{% endfor %}
+</ul>
+<p>
+	<a href="{% url 'newslink_create' %}">Add +</a>
+</p>
+{% endblock %}
+
+{% block paginator %}
+	{% include "paginator_snippet.html" with object_list=newslink_list %}
+{% endblock %}

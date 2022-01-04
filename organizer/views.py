@@ -1,14 +1,13 @@
-from django.views.generic import View
-from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import (
+    View, ListView, DetailView, CreateView, UpdateView, DeleteView,
+)
 
 from .models import Tag, Startup, NewsLink
 from .forms import TagForm, StartupForm, NewsLinkForm
 
-from .utils import (
-	ListView, CreateView, DetailView, UpdateView, DeleteView,
-)
 
-
+# Tag views
 class TagList(ListView):
     model = Tag
     context_object_name = 'tag_list'
@@ -34,14 +33,15 @@ class TagUpdate(UpdateView):
 
 class TagDelete(DeleteView):
     model = Tag
-    form_class = TagForm
     template_name = 'organizer/tag_form_delete.html'
+    success_url = reverse_lazy('tag_list')
 
 
+# Startup views
 class StartupList(ListView):
-	model = Startup
-	context_object_name = 'startup_list'
-	template_name = 'organizer/startup_list.html'
+    model = Startup
+    context_object_name = 'startup_list'
+    template_name = 'organizer/startup_list.html'
 
 
 class StartupDetail(DetailView):
@@ -63,8 +63,15 @@ class StartupUpdate(UpdateView):
 
 class StartupDelete(DeleteView):
     model = Startup
-    form_class = StartupForm
     template_name = 'organizer/startup_form_delete.html'
+    success_url = reverse_lazy('startup_list')
+
+
+# NewsLink views
+class NewsLinkList(ListView):
+	model = NewsLink
+	context_object_name = 'newslink_list'
+	template_name = 'organizer/newslink_list.html'
 
 
 class NewsLinkCreate(CreateView):
@@ -86,5 +93,5 @@ class NewsLinkUpdate(UpdateView):
 
 class NewsLinkDelete(DeleteView):
     model = NewsLink
-    form_class = NewsLinkForm
     template_name = 'organizer/newslink_form_delete.html'
+    success_url = reverse_lazy('newslink_list')
