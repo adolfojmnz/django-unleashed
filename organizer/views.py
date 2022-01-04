@@ -69,9 +69,9 @@ class StartupDelete(DeleteView):
 
 # NewsLink views
 class NewsLinkList(ListView):
-	model = NewsLink
-	context_object_name = 'newslink_list'
-	template_name = 'organizer/newslink_list.html'
+    model = NewsLink
+    context_object_name = 'newslink_list'
+    template_name = 'organizer/newslink_list.html'
 
 
 class NewsLinkCreate(CreateView):
@@ -94,4 +94,6 @@ class NewsLinkUpdate(UpdateView):
 class NewsLinkDelete(DeleteView):
     model = NewsLink
     template_name = 'organizer/newslink_form_delete.html'
-    success_url = reverse_lazy('newslink_list')
+
+    def get_success_url(self):
+        return self.object.startup.get_absolute_url()
