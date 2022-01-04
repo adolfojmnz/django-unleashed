@@ -14,7 +14,9 @@
 	<li>
 		<a href="{{ startup.get_absolute_url }}">
 			{{ startup.name }}
-		</a> - <span class="edit-icon"><a href="{{ startup.get_update_url }}">&#128393;</a></span>
+		</a>
+		- <a href="{{ startup.get_update_url }}">&#128393;</a>
+		- <a href="{{ startup.get_delete_url }}">&#128465;</a>
 	</li>
 	{% empty %}
 	<li><em>There are no startups availables.</em></li>
