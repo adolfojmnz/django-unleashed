@@ -1,46 +1,37 @@
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.views.generic import View
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import (
+	View, ListView, CreateView, DetailView, UpdateView, DeleteView,
+)
 
 from .models import Post
 from .forms import PostForm
 
-from .utils import (
-	ObjectListMixin, ObjectDetailMixin,
-	CreateObjectMixin, UpdateObjectMixin, DeleteObjectMixin,
-)
 
-
-class PostList(View, ObjectListMixin):
+class PostList(ListView):
 	model = Post
-	paginate_by = 1
-	context_name = 'post_list'
+	context_object_name = 'post_list'
 	template_name = 'blog/post_list.html'
 
 
-class PostDetail(View, ObjectDetailMixin):
+class PostDetail(DetailView):
 	model = Post
-	context_name = 'post'
 	template_name = 'blog/post_detail.html'
 
 
-class PostCreate(View, CreateObjectMixin):
+class PostCreate(CreateView):
     form_class    = PostForm
     model         = Post
     template_name = 'blog/post_form_create.html'
 
 
-class PostUpdate(View, UpdateObjectMixin):
+class PostUpdate(UpdateView):
     form_class    = PostForm
     model         = Post
-    context_name  = 'post'
     template_name = 'blog/post_form_update.html'
 
 
-class PostDelete(View, DeleteObjectMixin):
-    form_class    = PostForm
+class PostDelete(DeleteView):
     model         = Post
-    context_name  = 'post'
-    redirect_to   = 'post_list'
+    success_url   = reverse_lazy('post_list')
     template_name = 'blog/post_form_delete.html'
