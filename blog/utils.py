@@ -109,7 +109,7 @@ class DeleteObjectMixin(GetObjectMixin):
         return redirect(self.redirect_to)
 
 
-class YearArchiveListView(View):
+class YearArchiveIndexView(View):
     model = None
     template_name = ''
 
@@ -118,13 +118,14 @@ class YearArchiveListView(View):
 
     def get(self, request):
         context = {
-            'archive_list': self.get_archive_list()
+            'archive_index': self.get_archive_list()
         }
         return render(request, self.template_name, context)
 
 
-class YearArchiveDetailView(View):
+class YearArchiveView(View):
     model = None
+    template_name = ''
 
     def get_archive_elements(self, year):
         return self.model.objects.filter(pub_date__year=year)
