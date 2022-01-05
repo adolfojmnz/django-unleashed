@@ -1,13 +1,14 @@
 from django.urls import reverse_lazy
 from django.views.generic import View
 from django.views.generic import (
-	View, ListView, CreateView, DetailView, UpdateView, DeleteView,
+	CreateView, DetailView, UpdateView, DeleteView,
+	View, ListView, YearArchiveView,
 )
 
 from .models import Post
 from .forms import PostForm
 
-from .utils import YearArchiveListView, YearArchiveDetailView
+from .utils import YearArchiveIndexView
 
 
 class PostList(ListView):
@@ -39,11 +40,14 @@ class PostDelete(DeleteView):
     template_name = 'blog/post_form_delete.html'
 
 
-class PostArchiveList(YearArchiveListView):
+class PostArchiveYearIndex(YearArchiveIndexView):
 	model = Post
-	template_name = 'blog/year_archive_list.html'
+	template_name = 'blog/post_archive_year_list.html'
 
 
-class PostArchiveDetail(YearArchiveDetailView):
+class PostArchiveYear(YearArchiveView):
 	model = Post
-	template_name = 'blog/year_archive_detail.html'
+	date_field = 'pub_date'
+	make_object_list = True
+	context_object_name = 'archive_list'
+	template_name = 'blog/post_archive_year.html'

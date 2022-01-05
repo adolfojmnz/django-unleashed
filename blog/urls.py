@@ -1,13 +1,15 @@
 from django.urls import path
 
 from .views import (
-	PostList, PostArchiveList, PostArchiveDetail, PostDetail, PostCreate, PostUpdate, PostDelete,
+	PostList,
+	PostArchiveYearIndex, PostArchiveYear,
+	PostCreate, PostDetail, PostUpdate, PostDelete,
 )
 
 
 urlpatterns = [
-	path('blog/archives/', PostArchiveList.as_view(), name='post_archives'),
-	path('blog/archives/<int:year>/', PostArchiveDetail.as_view(), name='post_archive_detail'),
+	path('blog/archives/', PostArchiveYearIndex.as_view(), name='post_archives_year_index'),
+	path('blog/archives/<int:year>/', PostArchiveYear.as_view(), name='post_archive_year'),
 
 	path('blog/', PostList.as_view(), name='post_list'),
 	path('blog/create/', PostCreate.as_view(), name='post_create'),
