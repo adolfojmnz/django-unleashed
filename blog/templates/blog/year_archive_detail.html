@@ -1,0 +1,38 @@
+{% extends parent_template|default:"blog/base_blog.html" %}
+
+{% block title %}
+	{{ block.super }} - Post Archives
+{% endblock %}
+
+{% block styles %}
+	<style>
+		li {
+			display: list-item;
+			list-style: circle;
+		}
+	</style>
+{% endblock %}
+
+{% block heading %}
+	Post Archives
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+
+		{% for archive in archive_list %}
+			<div class="row">
+				<ul>
+					<div class="col">
+						<li>
+							<a href="{{ archive.get_absolute_url }}">
+								{{ archive.title }}
+							</a> - Published on {{ archive.pub_date }}
+						</li>
+					</div>
+				</ul>
+			</div>
+		{% endfor %}
+
+	</div>
+{% endblock %}

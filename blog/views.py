@@ -7,6 +7,8 @@ from django.views.generic import (
 from .models import Post
 from .forms import PostForm
 
+from .utils import YearArchiveListView, YearArchiveDetailView
+
 
 class PostList(ListView):
 	model = Post
@@ -35,3 +37,13 @@ class PostDelete(DeleteView):
     model         = Post
     success_url   = reverse_lazy('post_list')
     template_name = 'blog/post_form_delete.html'
+
+
+class PostArchiveList(YearArchiveListView):
+	model = Post
+	template_name = 'blog/year_archive_list.html'
+
+
+class PostArchiveDetail(YearArchiveDetailView):
+	model = Post
+	template_name = 'blog/year_archive_detail.html'

@@ -1,0 +1,30 @@
+{% extends parent_template|default:"blog/base_blog.html" %}
+
+{% block title %}
+	{{ block.super }} - Post Archives
+{% endblock %}
+
+{% block heading %}
+	Post Archives
+{% endblock %}
+
+{% block styles %}
+	<style>
+		li {
+			display: list-item;
+			list-style: circle;
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+	{% for archive in archive_list %}
+		<ul>
+			<li>
+				<a href="{% url 'post_archive_detail' archive.year %}">
+					{{ archive.year }}
+				</a>
+			</li>
+		</ul>
+	{% endfor %}
+{% endblock %}

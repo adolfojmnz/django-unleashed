@@ -18,6 +18,10 @@
 
 		{% load static %}
 		<link rel="stylesheet" type="text/css" href="{% static 'site/style.css' %}">
+
+		{% block styles %}
+			{# override default styles #}
+		{% endblock %}
 	{% endblock %}
 </head>
 
