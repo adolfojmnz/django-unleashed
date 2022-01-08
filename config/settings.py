@@ -30,6 +30,7 @@ INSTALLED_APPS = [
 	'django_extensions',
 
 	# my apps
+	'user',
 	'blog',
 	'routes',
 	'contact',

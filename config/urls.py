@@ -11,4 +11,5 @@ urlpatterns = [
 	path('', include('blog.urls')),
 	path('', include('organizer.urls')),
 	path('', include('contact.urls')),
+	path('', include('user.urls')),
 ]
