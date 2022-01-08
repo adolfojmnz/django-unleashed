@@ -132,6 +132,7 @@ class YearArchiveView(View):
 
     def get(self, request, year):
         context = {
-            'archive_list': self.get_archive_elements(year)
+            self.context_object_name: self.get_archive_elements(year),
+            'year': year,
         }
         return render(request, self.template_name, context)

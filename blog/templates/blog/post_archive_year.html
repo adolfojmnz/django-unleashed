@@ -1,17 +1,17 @@
 {% extends parent_template|default:"blog/base_blog.html" %}
 
 {% block title %}
-	{{ block.super }} - Post Archives
+	{{ year|date:"Y" }} Blog Posts
 {% endblock %}
 
 {% block heading %}
-	Post Archives
+	{{ year|date:'Y' }} Blog Post Archives
 {% endblock %}
 
 {% block content %}
 	<div class="container">
 
-		{% for archive in archive_list %}
+		{% for archive in archives %}
 			<div class="row">
 				<ul>
 					<div class="col">

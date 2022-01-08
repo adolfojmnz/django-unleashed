@@ -42,12 +42,13 @@ class PostDelete(DeleteView):
 
 class PostArchiveYearIndex(YearArchiveIndexView):
 	model = Post
-	template_name = 'blog/post_archive_year_list.html'
+	context_object_name = 'archive_index'
+	template_name = 'blog/post_archive_year_index.html'
 
 
 class PostArchiveYear(YearArchiveView):
 	model = Post
 	date_field = 'pub_date'
 	make_object_list = True
-	context_object_name = 'archive_list'
+	context_object_name = 'archives'
 	template_name = 'blog/post_archive_year.html'
